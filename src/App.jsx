@@ -7,44 +7,38 @@ import { Binary_Tree } from "./Binary_tree";
 const bst = new Binary_Tree();
 
 function App() {
-
   if (bst.root === null) {
     bst.root = new Node(1, 0);
-  };
+  }
 
-  console.log('===========노드 2 추가===========');
-  bst.insert(1, 2);
+  console.log("===========노드 2 추가===========");
+
+  // parent node 구하기
+
+  const node2 = bst.insert(bst.root, 2);
   console.log(bst);
   // bst.insert(3, 2);
   // // bst.insert(2);
   // // bst.insert(4);
 
-  
-  //console.log('===========노드 4 추가===========');
-  //bst.insert(2, 4);
-  //console.log(bst);
-  
-
+  console.log("===========노드 4 추가===========");
+  const node4 = bst.insert(node2, 4);
+  console.log(bst);
 
   // console.log('삭제 진행');
   // bst.remove(3, 2);
   // console.log(bst);
 
-
-
-
-
-
   // const inset_value = [
   //   // {inset: "0% 0% 0% 0%"}
-  //   // Level, Parent ID, 
+  //   // Level, Parent ID,
   //   {
-  //     key: 0, 
+  //     key: 0,
 
-  //     top: 0, 
-  //     right: 0, 
-  //     bottom: 0, 
-  //     left: 0 
+  //     top: 0,
+  //     right: 0,
+  //     bottom: 0,
+  //     left: 0
   //   }
   // ];
 
@@ -59,7 +53,6 @@ function App() {
   //   console.log('초기 Arr 확인');
   //   console.log(arr);
 
-
   //   //let old = arr[e.target.id];
   //   let old = arr.find(tmp_item => parseInt(tmp_item.key) === parseInt(e.target.id));
   //   console.log('타겟 id = '+e.target.id);
@@ -70,12 +63,11 @@ function App() {
   //   let new_bottom = old.bottom;
   //   let new_left = old.left;
 
-  //   // 화면 너비 
+  //   // 화면 너비
   //   let calc_width = (100 - (old.left + old.right)) / 2;
 
-  //   // 화면 높이 
+  //   // 화면 높이
   //   let calc_height = (100 - (old.top + old.bottom)) / 2;
-
 
   //   // (abs(R - L) > abs(B - T) ?)
   //   if (calc_width >= calc_height) {
@@ -103,10 +95,6 @@ function App() {
   // const Del_Div = (k) => {
   //   // 기존 배열에서 inset 값을 변경 후 가져와야한다.
 
-
-    
-
-
   //   setArr(arr.filter((x) => x .key!== k));
   //   console.log(arr);
   // };
@@ -117,7 +105,7 @@ function App() {
   //       // console.log(e.key);
   //       return (
   //         // 가로와 세로의 길이를 비교해서 Float 를 설정한다 (None / Left or Right)
-  //         <div 
+  //         <div
   //           className="div_Background" key={e.key} id={e.key}
   //           style={{ inset: `${e.top}% ${e.right}% ${e.bottom}% ${e.left}%` }}
   //         >

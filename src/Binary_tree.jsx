@@ -1,10 +1,18 @@
 export class Node {
-  constructor(id, p_id, div_type = 'N', node_type = 'P', left = null, right = null) {
+  constructor(
+    id,
+    div_type = "N",
+    node_type = "P",
+
+    p_node = null,
+    left = null,
+    right = null
+  ) {
     this.id = id;
-    this.p_id = p_id;
     this.div_type = div_type;
     this.node_type = node_type;
-    
+
+    this.p_node = p_node;
     this.left = left;
     this.right = right;
   }
@@ -15,7 +23,7 @@ export class Node {
 //     if (node.id === target_id) {
 //       // console.log('node.id = ' + node.id);
 //       // console.log('target_id = ' + target_id);
-      
+
 //       return node;
 //     } else {
 //       if (node.left) {
@@ -44,25 +52,25 @@ export class Binary_Tree {
       if (parseInt(node.id) === parseInt(target_id)) {
         // console.log('node.id = ' + node.id);
         // console.log('target_id = ' + target_id);
-        
+
         // console.log(node);
         return node;
       } else {
         if (node.left) {
-          console.log('===========Left 찾음===========');
-          console.log(node);
-      
-          searchTree(node.left);
-        }
-  
-        if (node.right) {
-          console.log('===========Right 찾음===========');
+          console.log("===========Left 찾음===========");
           console.log(node);
 
-          searchTree(node.right);
+          return searchTree(node.left);
+        }
+
+        if (node.right) {
+          console.log("===========Right 찾음===========");
+          console.log(node);
+
+          return searchTree(node.right);
         }
       }
-  
+
       // console.log('node.id = ' + node.id);
       // console.log('target_id = ' + target_id);
     }
@@ -72,46 +80,44 @@ export class Binary_Tree {
 
     searchTree(this.root);
 
-    console.log('===========Left 정보===========');
+    console.log("===========Left 정보===========");
     console.log(this.root.left);
 
     return this.root;
-  }  
+  }
 
   // 추가 버튼을 통해 노드 추가 요청이 온다. 이때, 자신의 node_ID(key)를 들고 오기 때문에 Parent ID 또한 알 수 있다.
   // 기존 DIV는 좌(상)에 위치하기 때문에, 추가는 무조건 우(하)에 된다. => Right Node에 Node를 추가함.
   // 그렇다면 Left는 언제 생기냐? 추가 버튼이 눌려서 이벤트가 생성될 때, 해당 Div에 있는 key를 알 수 있으니, 그걸로 Left로 지정한다.
-  // Right가 생길 때, Left가 null 일 수는 없다. 이때는 노드 자체를 삭제하고 상위 부모 자리에 Right 노드 정보를 넣어주어야한다.  
-  insert(parent_id, new_id) {
-    console.log('===========insert log 시작============');
+  // Right가 생길 때, Left가 null 일 수는 없다. 이때는 노드 자체를 삭제하고 상위 부모 자리에 Right 노드 정보를 넣어주어야한다.
+  insert(parent_node, new_id) {
+    console.log("===========insert log 시작============");
 
     // 부모 node 정보를 불러와서 left, right 로 분류하여 추가해준다.(기존 Left, 신규 Right)
-    const old_node   = this.find_node(parent_id);
-    const left_node  = new Node(new_id,     parent_id);
-    const right_node = new Node(new_id + 1, parent_id);
+    // const old_node = this.find_node(parent_id);
+    const old_node = parent_node;
+    const left_node = new Node(new_id, "N", "C", old_node);
+    const right_node = new Node(new_id + 1, "N", "C", old_node);
 
-    console.log('부모 ID = ' + parent_id);
+    console.log("부모 ID = " + old_node.id);
     console.log(old_node);
 
     // target 노드를 찾아왔으니, Left Right 값을 입력한다.
     if (old_node) {
       // Left node에 대한 내용 채워주고
-      left_node.node_type = 'C';
+      // left_node.node_type = "C";
 
       // Right node에 대한 내용 채워주고
-      right_node.node_type = 'C';
+      // right_node.node_type = "C";
 
       // 기존 old도 값을 바꿔주고
-      old_node.node_type = 'P';
+      old_node.node_type = "P";
 
       // Left | right 입력
-      old_node.left  = left_node;
+      old_node.left = left_node;
       old_node.right = right_node;
-
-      return;
-    } else {
-      return null;
     }
+    return old_node.left;
   }
 
   // remove(data) {
@@ -129,7 +135,7 @@ export class Binary_Tree {
   //       if (node.left == null) {
   //         return node.right;
   //       }
-  //       // node has no right child 
+  //       // node has no right child
   //       if (node.right == null) {
   //         return node.left;
   //       }
@@ -153,16 +159,6 @@ export class Binary_Tree {
   //   this.root = removeNode(this.root, data);
   // }
 }
-
-
-
-
-
-
-
-
-
-
 
 // export class Binary_Tree {
 //   constructor() {
@@ -201,12 +197,6 @@ export class Binary_Tree {
 //           return searchTree(node.left);
 
 //         };
-
-
-
-
-
-
 
 //         if (new_ID < node.id) {
 //           // console.log('if 1 node = ' + new_ID + ' / ' + node.id);
@@ -251,7 +241,7 @@ export class Binary_Tree {
 //         if (node.left == null) {
 //           return node.right;
 //         }
-//         // node has no right child 
+//         // node has no right child
 //         if (node.right == null) {
 //           return node.left;
 //         }

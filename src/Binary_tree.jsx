@@ -220,18 +220,18 @@ export class Binary_Tree {
     return;
   }
 
-  resize_div(tmp_arr) {
-    tmp_arr.forEach(tmp_node => {
-      // 부모 노드 대비 자신의 비율에 따라, Inset 값을 재조정해준다.(= 노드타입이 P인 경우, 하위 노드의 inset 값을 재조정함. 하위 노드가 P인 경우도 마찬가지)
-      if (tmp_node.node_type === "P") {
+  // resize_div(tmp_arr) {
+  //   tmp_arr.forEach(tmp_node => {
+  //     // 부모 노드 대비 자신의 비율에 따라, Inset 값을 재조정해준다.(= 노드타입이 P인 경우, 하위 노드의 inset 값을 재조정함. 하위 노드가 P인 경우도 마찬가지)
+  //     if (tmp_node.node_type === "P") {
 
-      }
+  //     }
 
 
-      console.log(tmp_node);
-    });
+  //     console.log(tmp_node);
+  //   });
 
-  }
+  // }
 }
 
 // export class Binary_Tree {

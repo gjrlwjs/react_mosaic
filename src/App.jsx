@@ -94,6 +94,7 @@ function App() {
               </div>
               <div className="div_Body">{e.node_text}</div>
             </div>
+            // <div className="div_Col" draggable = "true"></div>
           );
         }
       })}

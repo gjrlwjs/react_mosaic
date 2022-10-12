@@ -70,8 +70,8 @@ export class Binary_Tree {
     // 부모 node 정보를 불러와서 left, right 로 분류하여 추가해준다.(기존 Left, 신규 Right)
     // const old_node = this.find_node(parent_id);
     const old_node = parent_node;
-    const left_node = new Node(new_id, "N", "C", old_node.node_text,              old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, old_node.id);
-    const right_node = new Node(new_id + 1, "N", "C", "windows " + (text_idx + 1), old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, old_node.id);
+    const left_node = new Node(new_id, "N", "C", old_node.node_text,               old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, 50, old_node.id);
+    const right_node = new Node(new_id + 1, "N", "C", "windows " + (text_idx + 1), old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, 50, old_node.id);
 
     // console.log("부모 ID = " + old_node.id);
     // console.log(old_node);
@@ -220,18 +220,18 @@ export class Binary_Tree {
     return;
   }
 
-  // resize_div(tmp_arr) {
-  //   tmp_arr.forEach(tmp_node => {
-  //     // 부모 노드 대비 자신의 비율에 따라, Inset 값을 재조정해준다.(= 노드타입이 P인 경우, 하위 노드의 inset 값을 재조정함. 하위 노드가 P인 경우도 마찬가지)
-  //     if (tmp_node.node_type === "P") {
+  resize_div(tmp_arr) {
+    tmp_arr.forEach(tmp_node => {
+      // 부모 노드 대비 자신의 비율에 따라, Inset 값을 재조정해준다.(= 노드타입이 P인 경우, 하위 노드의 inset 값을 재조정함. 하위 노드가 P인 경우도 마찬가지)
+      if (tmp_node.node_type === "P") {
 
-  //     }
+      }
 
 
-  //     console.log(tmp_node);
-  //   });
+      console.log(tmp_node);
+    });
 
-  // }
+  }
 }
 
 // export class Binary_Tree {

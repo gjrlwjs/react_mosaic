@@ -60,6 +60,11 @@ function App() {
     } else {
       bst.remove(null, arr[arr[e.id].p_id], arr[e.id]);
     } 
+
+    // inset 재조정
+    bst.resize_div(arr);
+
+    // 배열 갱신
     setArr([...arr]);
 
     console.log('현재 Arr ===============');

@@ -144,6 +144,7 @@ export class Binary_Tree {
         parent_node.right.inset_right  = parent_node.inset_right;
         parent_node.right.inset_bottom = parent_node.inset_bottom;
         parent_node.right.inset_left   = parent_node.inset_left;
+        parent_node.right.ratio        = parent_node.ratio;
 
         //parent_node.right.node_text    = parent_node.node_text;
 
@@ -161,6 +162,7 @@ export class Binary_Tree {
         parent_node.left.inset_right  = parent_node.inset_right;
         parent_node.left.inset_bottom = parent_node.inset_bottom;
         parent_node.left.inset_left   = parent_node.inset_left;    
+        parent_node.left.ratio        = parent_node.ratio;
         
         //parent_node.left.node_text    = parent_node.node_text;        
 
@@ -181,7 +183,8 @@ export class Binary_Tree {
         parent_node.right.inset_right  = parent_node.inset_right;
         parent_node.right.inset_bottom = parent_node.inset_bottom;
         parent_node.right.inset_left   = parent_node.inset_left;      
-        
+        parent_node.right.ratio        = parent_node.ratio;
+
         //parent_node.right.node_text    = parent_node.node_text;
       } else {
         parent_node.left.p_id = null;
@@ -191,6 +194,7 @@ export class Binary_Tree {
         parent_node.left.inset_right  = parent_node.inset_right;
         parent_node.left.inset_bottom = parent_node.inset_bottom;
         parent_node.left.inset_left   = parent_node.inset_left;        
+        parent_node.left.ratio        = parent_node.ratio;
         
         //parent_node.left.node_text    = parent_node.node_text;            
       }
@@ -220,17 +224,41 @@ export class Binary_Tree {
     return;
   }
 
+  copy_inset(tmp_source, tmp_dst) {
+    tmp_dst.inset_top    = tmp_source.inset_top;
+    tmp_dst.inset_right  = tmp_source.inset_right;
+    tmp_dst.inset_bottom = tmp_source.inset_bottom;
+    tmp_dst.inset_left   = tmp_source.inset_left;
+  }
+
   resize_div(tmp_arr) {
     tmp_arr.forEach(tmp_node => {
-      // 부모 노드 대비 자신의 비율에 따라, Inset 값을 재조정해준다.(= 노드타입이 P인 경우, 하위 노드의 inset 값을 재조정함. 하위 노드가 P인 경우도 마찬가지)
+      // 인자가 부모 노드이면(= 노드타입이 P인 경우, 하위 노드의 inset 값을 재조정함. 하위 노드가 P인 경우도 마찬가지)
       if (tmp_node.node_type === "P") {
+        let tmp_left  = tmp_node.left;
+        let tmp_right = tmp_node.right;
 
+        // inset OverWrite
+        this.copy_inset(tmp_node, tmp_left);
+        this.copy_inset(tmp_node, tmp_right);
+
+        // 부모의 분할 타입에 따라, 부모 대비 자식의 비율을 inset 값에 재조정해준다.
+        if (tmp_node.div_type === "C") {
+          // C = Col = 가로 = left / right
+          let tmp_width = (100 - (tmp_node.inset_left + tmp_node.inset_right));
+
+          tmp_left.inset_right = tmp_left.inset_right + (tmp_width * (       tmp_left.ratio  / 100));
+          tmp_right.inset_left = tmp_right.inset_left + (tmp_width * ((100 - tmp_left.ratio) / 100)); //tmp_right.ratio / 100));
+        } else {
+          // R = Row = 세로 = top / bottom
+          let tmp_height = (100 - (tmp_node.inset_top + tmp_node.inset_bottom));
+
+          tmp_left.inset_bottom = tmp_left.inset_bottom + (tmp_height * (       tmp_left.ratio  / 100));
+          tmp_right.inset_top   = tmp_right.inset_top   + (tmp_height * ((100 - tmp_left.ratio) / 100)); //tmp_right.ratio / 100));
+        }
       }
-
-
-      console.log(tmp_node);
+//      console.log(tmp_node);
     });
-
   }
 }
 

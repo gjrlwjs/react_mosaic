@@ -8,6 +8,7 @@ export class Node {
     inset_right = 0,
     inset_bottom = 0,
     inset_left = 0,
+    ratio = 50,
 
     p_id = null,
     left = null,
@@ -22,6 +23,7 @@ export class Node {
     this.inset_right = inset_right;
     this.inset_bottom = inset_bottom;
     this.inset_left = inset_left;
+    this.ratio = ratio;
 
     this.p_id = p_id;
     this.left = left;
@@ -62,14 +64,14 @@ export class Binary_Tree {
   // 기존 DIV는 좌(상)에 위치하기 때문에, 추가는 무조건 우(하)에 된다. => Right Node에 Node를 추가함.
   // 그렇다면 Left는 언제 생기냐? 추가 버튼이 눌려서 이벤트가 생성될 때, 해당 Div에 있는 key를 알 수 있으니, 그걸로 Left로 지정한다.
   // Right가 생길 때, Left가 null 일 수는 없다. 이때는 노드 자체를 삭제하고 상위 부모 자리에 Right 노드 정보를 넣어주어야한다.
-  insert(parent_node, new_id) {
-    console.log("===========insert 시작============");
+  insert(parent_node, new_id, text_idx) {
+    console.log("===========insert 1회============");
 
     // 부모 node 정보를 불러와서 left, right 로 분류하여 추가해준다.(기존 Left, 신규 Right)
     // const old_node = this.find_node(parent_id);
     const old_node = parent_node;
-    const left_node = new Node(new_id, "N", "C", old_node.node_text,            old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, old_node.id);
-    const right_node = new Node(new_id + 1, "N", "C", "windows" + (new_id + 1), old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, old_node.id);
+    const left_node = new Node(new_id, "N", "C", old_node.node_text,              old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, old_node.id);
+    const right_node = new Node(new_id + 1, "N", "C", "windows " + (text_idx + 1), old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, old_node.id);
 
     // console.log("부모 ID = " + old_node.id);
     // console.log(old_node);
@@ -128,6 +130,7 @@ export class Binary_Tree {
   // 자신과 형제노드 - 부모노드 간의 연결을 해제하고
   // 조부모노드와 자신의 정보를 연결해준다.
   remove(grand_node, parent_node, del_node) {
+    console.log("===========delete 1회============");    
     // 조부모 노드의 존재 여부에 따라 로직이 달라짐
     if (grand_node) {
 
@@ -215,6 +218,19 @@ export class Binary_Tree {
     parent_node.right = null;    
     // this.root = removeNode(this.root, del_id);
     return;
+  }
+
+  resize_div(tmp_arr) {
+    tmp_arr.forEach(tmp_node => {
+      // 부모 노드 대비 자신의 비율에 따라, Inset 값을 재조정해준다.(= 노드타입이 P인 경우, 하위 노드의 inset 값을 재조정함. 하위 노드가 P인 경우도 마찬가지)
+      if (tmp_node.node_type === "P") {
+
+      }
+
+
+      console.log(tmp_node);
+    });
+
   }
 }
 

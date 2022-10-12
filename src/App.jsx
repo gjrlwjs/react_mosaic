@@ -6,14 +6,16 @@ import { Binary_Tree } from "./Binary_tree";
 
 const bst = new Binary_Tree();
 let idx = 0;
+let node_text_idx = 0;
 
 function App() {
   const [arr, setArr] = useState([]);
 
   if (bst.root === null) {
-    bst.root = new Node(idx, "N", "C", "windows1");
+    bst.root = new Node(idx, "N", "C", "windows " + (node_text_idx + 1), 0, 0, 0, 0, 100);
     // console.log("===========arr 추가===========");
     //arr.push(bst.root);
+    node_text_idx = node_text_idx + 1;
     setArr([bst.root]);
     // setIdx(idx + 1);
     // console.log(arr);
@@ -30,18 +32,19 @@ function App() {
     // 0을 1|2로 Div 추가하기
     // const node2 = bst.insert(bst.root, arr.length, arr);
     // console.log("e 로그 = " + e.target.id);
-    const insert_result = bst.insert(arr[e.target.id], arr.length);
+    const insert_result = bst.insert(arr[e.target.id], arr.length, node_text_idx);
 
     if (insert_result) {
       //arr.push(insert_result[0]);
       //arr.push(insert_result[1]);
       idx = idx + 2;
+      node_text_idx = node_text_idx + 1;
       setArr([...arr, insert_result[0], insert_result[1]]);
     };
 
     //setArr([...arr]);
     // setIdx(idx + 1);
-    // console.log('현재 index = ' + idx);
+    console.log('현재 Arr ===============');
     console.log(arr);
   };
 
@@ -57,8 +60,9 @@ function App() {
     } else {
       bst.remove(null, arr[arr[e.id].p_id], arr[e.id]);
     } 
-    console.log("삭제했음~~~");
     setArr([...arr]);
+
+    console.log('현재 Arr ===============');
     console.log(arr);
   };
 

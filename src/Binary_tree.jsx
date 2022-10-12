@@ -1,9 +1,9 @@
 export class Node {
   constructor(
-    id,                           // 자신의 ID
-    div_type = "N",               // DIV 표시 방식(None / Col / Row)
-    node_type = "C",              // 노드 타입(Disable / Parent / Child )
-    node_text = "",               // Body Text
+    id, // 자신의 ID
+    div_type = "N", // DIV 표시 방식(None / Col / Row)
+    node_type = "C", // 노드 타입(Disable / Parent / Child )
+    node_text = "", // Body Text
     inset_top = 0,
     inset_right = 0,
     inset_bottom = 0,
@@ -70,8 +70,30 @@ export class Binary_Tree {
     // 부모 node 정보를 불러와서 left, right 로 분류하여 추가해준다.(기존 Left, 신규 Right)
     // const old_node = this.find_node(parent_id);
     const old_node = parent_node;
-    const left_node = new Node(new_id, "N", "C", old_node.node_text,               old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, 50, old_node.id);
-    const right_node = new Node(new_id + 1, "N", "C", "windows " + (text_idx + 1), old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, 50, old_node.id);
+    const left_node = new Node(
+      new_id,
+      "N",
+      "C",
+      old_node.node_text,
+      old_node.inset_top,
+      old_node.inset_right,
+      old_node.inset_bottom,
+      old_node.inset_left,
+      50,
+      old_node.id
+    );
+    const right_node = new Node(
+      new_id + 1,
+      "N",
+      "C",
+      "windows " + (text_idx + 1),
+      old_node.inset_top,
+      old_node.inset_right,
+      old_node.inset_bottom,
+      old_node.inset_left,
+      50,
+      old_node.id
+    );
 
     // console.log("부모 ID = " + old_node.id);
     // console.log(old_node);
@@ -82,7 +104,8 @@ export class Binary_Tree {
       let calc_width = (100 - (old_node.inset_left + old_node.inset_right)) / 2;
 
       // 화면 높이
-      let calc_height = (100 - (old_node.inset_top + old_node.inset_bottom)) / 2;
+      let calc_height =
+        (100 - (old_node.inset_top + old_node.inset_bottom)) / 2;
 
       // (abs(R - L) > abs(B - T) ?)
       if (calc_width >= calc_height) {
@@ -105,9 +128,6 @@ export class Binary_Tree {
       old_node.node_type = "P";
       old_node.node_text = "";
 
-
-
-
       // Left node에 대한 내용 채워주고
       // left_node.node_type = "C";
 
@@ -117,36 +137,32 @@ export class Binary_Tree {
       // Left | right 입력
       // old_node.left_id  = left_node.id;
       // old_node.right_id = right_node.id;
-      old_node.left  = left_node;
+      old_node.left = left_node;
       old_node.right = right_node;
 
-      return [left_node, right_node];//[left_node, left_node, right_node];
+      return [left_node, right_node]; //[left_node, left_node, right_node];
     }
-    return null;//left_node;//old_node.left;
+    return null; //left_node;//old_node.left;
     // return left_node;//old_node.left;
   }
 
-  // 삭제시, 
+  // 삭제시,
   // 자신과 형제노드 - 부모노드 간의 연결을 해제하고
   // 조부모노드와 자신의 정보를 연결해준다.
   remove(grand_node, parent_node, del_node) {
-    console.log("===========delete 1회============");    
+    console.log("===========delete 1회============");
     // 조부모 노드의 존재 여부에 따라 로직이 달라짐
     if (grand_node) {
-
       // 형제 노드의 p_id를 바꿔준다.
       // 삭제할 노드의 위치가 Left?
       if (parent_node.left.id === del_node.id) {
-        parent_node.right.p_id = grand_node.id;
+        let tmp_node = parent_node.right;
 
         // 부모의 inset 값을 형제노드에 대입해준다.
-        parent_node.right.inset_top    = parent_node.inset_top;
-        parent_node.right.inset_right  = parent_node.inset_right;
-        parent_node.right.inset_bottom = parent_node.inset_bottom;
-        parent_node.right.inset_left   = parent_node.inset_left;
-        parent_node.right.ratio        = parent_node.ratio;
+        this.copy_inset(parent_node, tmp_node);
 
-        //parent_node.right.node_text    = parent_node.node_text;
+        tmp_node.p_id = grand_node.id;
+        tmp_node.ratio = parent_node.ratio;
 
         // 삭제할 노드의 부모노드가 조부모노드 기준 L? R? 체크
         if (grand_node.left.id === parent_node.id) {
@@ -155,23 +171,21 @@ export class Binary_Tree {
           grand_node.right = parent_node.right;
         }
       } else {
-        parent_node.left.p_id = grand_node.id;
+        let tmp_node = parent_node.left;
 
         // 부모의 inset 값을 형제노드에 대입해준다.
-        parent_node.left.inset_top    = parent_node.inset_top;
-        parent_node.left.inset_right  = parent_node.inset_right;
-        parent_node.left.inset_bottom = parent_node.inset_bottom;
-        parent_node.left.inset_left   = parent_node.inset_left;    
-        parent_node.left.ratio        = parent_node.ratio;
-        
-        //parent_node.left.node_text    = parent_node.node_text;        
+        this.copy_inset(parent_node, tmp_node);
+
+        // 부모의 inset 값을 형제노드에 대입해준다.
+        tmp_node.p_id = grand_node.id;
+        tmp_node.ratio = parent_node.ratio;
 
         // 삭제할 노드의 부모노드가 조부모노드 기준 L? R? 체크
         if (grand_node.left.id === parent_node.id) {
           grand_node.left = parent_node.left;
         } else {
           grand_node.right = parent_node.left;
-        }          
+        }
       }
     } else {
       // 삭제할 노드의 위치가 Left?
@@ -179,24 +193,24 @@ export class Binary_Tree {
         parent_node.right.p_id = null;
 
         // 부모의 inset 값을 형제노드에 대입해준다.
-        parent_node.right.inset_top    = parent_node.inset_top;
-        parent_node.right.inset_right  = parent_node.inset_right;
+        parent_node.right.inset_top = parent_node.inset_top;
+        parent_node.right.inset_right = parent_node.inset_right;
         parent_node.right.inset_bottom = parent_node.inset_bottom;
-        parent_node.right.inset_left   = parent_node.inset_left;      
-        parent_node.right.ratio        = parent_node.ratio;
+        parent_node.right.inset_left = parent_node.inset_left;
+        parent_node.right.ratio = parent_node.ratio;
 
         //parent_node.right.node_text    = parent_node.node_text;
       } else {
         parent_node.left.p_id = null;
 
         // 부모의 inset 값을 형제노드에 대입해준다.
-        parent_node.left.inset_top    = parent_node.inset_top;
-        parent_node.left.inset_right  = parent_node.inset_right;
+        parent_node.left.inset_top = parent_node.inset_top;
+        parent_node.left.inset_right = parent_node.inset_right;
         parent_node.left.inset_bottom = parent_node.inset_bottom;
-        parent_node.left.inset_left   = parent_node.inset_left;        
-        parent_node.left.ratio        = parent_node.ratio;
-        
-        //parent_node.left.node_text    = parent_node.node_text;            
+        parent_node.left.inset_left = parent_node.inset_left;
+        parent_node.left.ratio = parent_node.ratio;
+
+        //parent_node.left.node_text    = parent_node.node_text;
       }
       // // 부모노드와 삭제노드의 Type을 D(Delete)로 바꿔주고 형제노드 정보의 부모ID를 null로 바꾼다.(Root가 된다)
       // // del_node.p_id = -1;
@@ -218,24 +232,23 @@ export class Binary_Tree {
     // parent_node.div_type = "N";
     parent_node.node_type = "D";
 
-    parent_node.left  = null;
-    parent_node.right = null;    
+    parent_node.left = null;
+    parent_node.right = null;
     // this.root = removeNode(this.root, del_id);
-    return;
   }
 
   copy_inset(tmp_source, tmp_dst) {
-    tmp_dst.inset_top    = tmp_source.inset_top;
-    tmp_dst.inset_right  = tmp_source.inset_right;
+    tmp_dst.inset_top = tmp_source.inset_top;
+    tmp_dst.inset_right = tmp_source.inset_right;
     tmp_dst.inset_bottom = tmp_source.inset_bottom;
-    tmp_dst.inset_left   = tmp_source.inset_left;
+    tmp_dst.inset_left = tmp_source.inset_left;
   }
 
   resize_div(tmp_arr) {
-    tmp_arr.forEach(tmp_node => {
+    tmp_arr.forEach((tmp_node) => {
       // 인자가 부모 노드이면(= 노드타입이 P인 경우, 하위 노드의 inset 값을 재조정함. 하위 노드가 P인 경우도 마찬가지)
       if (tmp_node.node_type === "P") {
-        let tmp_left  = tmp_node.left;
+        let tmp_left = tmp_node.left;
         let tmp_right = tmp_node.right;
 
         // inset OverWrite
@@ -245,19 +258,23 @@ export class Binary_Tree {
         // 부모의 분할 타입에 따라, 부모 대비 자식의 비율을 inset 값에 재조정해준다.
         if (tmp_node.div_type === "C") {
           // C = Col = 가로 = left / right
-          let tmp_width = (100 - (tmp_node.inset_left + tmp_node.inset_right));
+          let tmp_width = 100 - (tmp_node.inset_left + tmp_node.inset_right);
 
-          tmp_left.inset_right = tmp_left.inset_right + (tmp_width * (       tmp_left.ratio  / 100));
-          tmp_right.inset_left = tmp_right.inset_left + (tmp_width * ((100 - tmp_left.ratio) / 100)); //tmp_right.ratio / 100));
+          tmp_left.inset_right =
+            tmp_left.inset_right + tmp_width * (tmp_left.ratio / 100);
+          tmp_right.inset_left =
+            tmp_right.inset_left + tmp_width * ((100 - tmp_left.ratio) / 100); //tmp_right.ratio / 100));
         } else {
           // R = Row = 세로 = top / bottom
-          let tmp_height = (100 - (tmp_node.inset_top + tmp_node.inset_bottom));
+          let tmp_height = 100 - (tmp_node.inset_top + tmp_node.inset_bottom);
 
-          tmp_left.inset_bottom = tmp_left.inset_bottom + (tmp_height * (       tmp_left.ratio  / 100));
-          tmp_right.inset_top   = tmp_right.inset_top   + (tmp_height * ((100 - tmp_left.ratio) / 100)); //tmp_right.ratio / 100));
+          tmp_left.inset_bottom =
+            tmp_left.inset_bottom + tmp_height * (tmp_left.ratio / 100);
+          tmp_right.inset_top =
+            tmp_right.inset_top + tmp_height * ((100 - tmp_left.ratio) / 100); //tmp_right.ratio / 100));
         }
       }
-//      console.log(tmp_node);
+      //      console.log(tmp_node);
     });
   }
 }
@@ -370,9 +387,6 @@ export class Binary_Tree {
 
 //export default Binary_Tree Node;
 
-
-
-
 // find_node(target_id) {
 //   function searchTree(node) {
 //     if (parseInt(node.id) === parseInt(target_id)) {
@@ -410,4 +424,101 @@ export class Binary_Tree {
 //   console.log(this.root.left);
 
 //   return this.root;
+// }
+
+// remove(grand_node, parent_node, del_node) {
+//   console.log("===========delete 1회============");
+//   // 조부모 노드의 존재 여부에 따라 로직이 달라짐
+//   if (grand_node) {
+
+//     // 형제 노드의 p_id를 바꿔준다.
+//     // 삭제할 노드의 위치가 Left?
+//     if (parent_node.left.id === del_node.id) {
+//       let tmp_node = parent_node.right;
+
+//       parent_node.right.p_id = grand_node.id;
+
+//       // 부모의 inset 값을 형제노드에 대입해준다.
+//       parent_node.right.inset_top    = parent_node.inset_top;
+//       parent_node.right.inset_right  = parent_node.inset_right;
+//       parent_node.right.inset_bottom = parent_node.inset_bottom;
+//       parent_node.right.inset_left   = parent_node.inset_left;
+//       parent_node.right.ratio        = parent_node.ratio;
+
+//       //parent_node.right.node_text    = parent_node.node_text;
+
+//       // 삭제할 노드의 부모노드가 조부모노드 기준 L? R? 체크
+//       if (grand_node.left.id === parent_node.id) {
+//         grand_node.left = parent_node.right;
+//       } else {
+//         grand_node.right = parent_node.right;
+//       }
+//     } else {
+//       parent_node.left.p_id = grand_node.id;
+
+//       // 부모의 inset 값을 형제노드에 대입해준다.
+//       parent_node.left.inset_top    = parent_node.inset_top;
+//       parent_node.left.inset_right  = parent_node.inset_right;
+//       parent_node.left.inset_bottom = parent_node.inset_bottom;
+//       parent_node.left.inset_left   = parent_node.inset_left;
+//       parent_node.left.ratio        = parent_node.ratio;
+
+//       //parent_node.left.node_text    = parent_node.node_text;
+
+//       // 삭제할 노드의 부모노드가 조부모노드 기준 L? R? 체크
+//       if (grand_node.left.id === parent_node.id) {
+//         grand_node.left = parent_node.left;
+//       } else {
+//         grand_node.right = parent_node.left;
+//       }
+//     }
+//   } else {
+//     // 삭제할 노드의 위치가 Left?
+//     if (parent_node.left.id === del_node.id) {
+//       parent_node.right.p_id = null;
+
+//       // 부모의 inset 값을 형제노드에 대입해준다.
+//       parent_node.right.inset_top    = parent_node.inset_top;
+//       parent_node.right.inset_right  = parent_node.inset_right;
+//       parent_node.right.inset_bottom = parent_node.inset_bottom;
+//       parent_node.right.inset_left   = parent_node.inset_left;
+//       parent_node.right.ratio        = parent_node.ratio;
+
+//       //parent_node.right.node_text    = parent_node.node_text;
+//     } else {
+//       parent_node.left.p_id = null;
+
+//       // 부모의 inset 값을 형제노드에 대입해준다.
+//       parent_node.left.inset_top    = parent_node.inset_top;
+//       parent_node.left.inset_right  = parent_node.inset_right;
+//       parent_node.left.inset_bottom = parent_node.inset_bottom;
+//       parent_node.left.inset_left   = parent_node.inset_left;
+//       parent_node.left.ratio        = parent_node.ratio;
+
+//       //parent_node.left.node_text    = parent_node.node_text;
+//     }
+//     // // 부모노드와 삭제노드의 Type을 D(Delete)로 바꿔주고 형제노드 정보의 부모ID를 null로 바꾼다.(Root가 된다)
+//     // // del_node.p_id = -1;
+//     // del_node.node_type = "D";
+
+//     // // parent_node.p_id  = -1;
+//     // // parent_node.div_type = "N";
+//     // parent_node.node_type = "D";
+
+//     // parent_node.left  = null;
+//     // parent_node.right = null;
+//   }
+
+//   // 부모노드와 삭제노드의 Type을 D(Delete)로 바꿔주고 형제노드 정보의 부모ID를 null로 바꾼다.(Root가 된다)
+//   // del_node.p_id = -1;
+//   del_node.node_type = "D";
+
+//   // parent_node.p_id  = -1;
+//   // parent_node.div_type = "N";
+//   parent_node.node_type = "D";
+
+//   parent_node.left  = null;
+//   parent_node.right = null;
+//   // this.root = removeNode(this.root, del_id);
+//   return;
 // }

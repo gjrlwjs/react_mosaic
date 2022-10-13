@@ -71,34 +71,145 @@ function App() {
     console.log(arr);
   };
 
+  const onmousedown_event = (e) => {
+    // 기존 배열에서 inset 값을 변경 후 가져와야한다.
+
+    // setArr(arr.filter((x) => x .key!== k));
+    // console.log(arr);
+    console.log("==============mouse down=============");
+    console.log(e);
+  };
+
   return (
     <>
-      {arr.map((e) => {
-        // console.log(e.key);
-        // console.log(e.node_type);
+      {arr.map(
+        (e) => {
+          if (e.node_type === "P") {
+            return (
+              <>
+                {/* Col or Row 바를 생성한다(Right Node 기준으로) */}
+                {e.div_type === "C" && (
+                  <div 
+                    className="div_Col" name={e.id}// id={e.id} onMouseDown={onmousedown_event(e)}
+                    style={{ inset: `${e.right.inset_top}% ${e.right.inset_right}% ${e.right.inset_bottom}% ${e.right.inset_left}%` }}></div>
+                  )
+                }
+                {e.div_type === "R" && (
+                  <div 
+                    className="div_Row" name={e.id} id={e.id} 
+                    style={{ inset: `${e.right.inset_top}% ${e.right.inset_right}% ${e.right.inset_bottom}% ${e.right.inset_left}%` }}></div>
+                  )
+                }
 
-        if (e.node_type === "C") {
-          // console.log(arr);
-
-          return (
-            // 가로와 세로의 길이를 비교해서 Float 를 설정한다 (None / Left or Right)
-            <div
-              className="div_Background" key={e.id} id={e.id}
-              style={{ inset: `${e.inset_top}% ${e.inset_right}% ${e.inset_bottom}% ${e.inset_left}%` }}
-            >
-              <div className="div_Title">
-                <button onClick={Add_Div} key={e.id} id={e.id}>
-                  추가
-                </button>
-                <button onClick={()=>{Del_Div(e)}}>삭제</button>
+                {/* Left, Right Node가 자식노드 타입이면 화면에 표시해준다 */}
+                {e.left.node_type === "C" && 
+                  (
+                    <div
+                      className="div_Background" //key={e.left.id} id={e.left.id}
+                      style={{ inset: `${e.left.inset_top}% ${e.left.inset_right}% ${e.left.inset_bottom}% ${e.left.inset_left}%` }}
+                    >
+                      <div className="div_Title">
+                        <button onClick={Add_Div} key={e.left.id} id={e.left.id}>
+                          추가
+                        </button>
+                        <button onClick={()=>{Del_Div(e.left)}}>삭제</button>
+                      </div>
+                      <div className="div_Body">{e.left.node_text}</div>
+                    </div>
+                  )
+                }
+                {e.right.node_type === "C" && 
+                  (
+                    <div
+                    className="div_Background" //key={e.right.id} id={e.right.id}
+                    style={{ inset: `${e.right.inset_top}% ${e.right.inset_right}% ${e.right.inset_bottom}% ${e.right.inset_left}%` }}
+                    >
+                    <div className="div_Title">
+                      <button onClick={Add_Div} key={e.right.id} id={e.right.id}>
+                        추가
+                      </button>
+                      <button onClick={()=>{Del_Div(e.right)}}>삭제</button>
+                    </div>
+                    <div className="div_Body">{e.right.node_text}</div>
+                    </div>
+                  )
+                }
+              </>
+            );
+          } else if (e.div_type === "N" && e.node_type !== "D" && e.p_id == null) {
+            return (
+              <div
+                className="div_Background" //key={e.id} id={e.id}
+                style={{ inset: `${e.inset_top}% ${e.inset_right}% ${e.inset_bottom}% ${e.inset_left}%` }}
+              >
+                <div className="div_Title">
+                  <button onClick={Add_Div} key={e.id} id={e.id}>
+                    추가
+                  </button>
+                  <button onClick={()=>{Del_Div(e)}}>삭제</button>
+                </div>
+                <div className="div_Body">{e.node_text}</div>
               </div>
-              <div className="div_Body">{e.node_text}</div>
-            </div>
-            // <div className="div_Col" draggable = "true"></div>
-          );
+            );
+          }
         }
-      })}
+      )}
     </>
+
+
+
+
+
+
+
+
+
+
+    // <>
+    //   {arr.map((e) => {
+    //     // node_type이 P를 만나면 바 Div를 생성해줘야 한다.
+    //     // 이때, 자식 노드에서 비율을 가져와서 inset 값을 설정해 줘야 한다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //     if (e.node_type === "C") {
+    //       // console.log(arr);
+
+    //       return (
+    //         // 가로와 세로의 길이를 비교해서 Float 를 설정한다 (None / Left or Right)
+    //         <div
+    //           className="div_Background" key={e.id} id={e.id}
+    //           style={{ inset: `${e.inset_top}% ${e.inset_right}% ${e.inset_bottom}% ${e.inset_left}%` }}
+    //         >
+    //           <div className="div_Title">
+    //             <button onClick={Add_Div} key={e.id} id={e.id}>
+    //               추가
+    //             </button>
+    //             <button onClick={()=>{Del_Div(e)}}>삭제</button>
+    //           </div>
+    //           <div className="div_Body">{e.node_text}</div>
+    //         </div>
+    //         // <div className="div_Col" draggable = "true"></div>
+    //       );
+    //     }
+
+
+
+
+    //   })}
+    // </>
   );
 }
 

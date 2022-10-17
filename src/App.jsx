@@ -95,9 +95,9 @@ function App() {
         // ((마우스의 현재 좌표 - 기준좌표)  / 부모의 길이) * 100
         // 부모의 div type이 C | R 에 따라 다르다.
         if (tmp_p.div_type === "C") {
-          tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / window.innerWidth)  * 100;
+          tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / (window.innerWidth))  * 100;
         } else {
-          tmp_l.ratio = ((event.clientY - (tmp_p.inset_top  * (window.innerHeight / 100))) / window.innerHeight) * 100;
+          tmp_l.ratio = ((event.clientY - (tmp_p.inset_top  * (window.innerHeight / 100))) / (window.innerHeight)) * 100;
         }
         tmp_r.ratio = 100 - tmp_l.ratio;
 

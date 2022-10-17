@@ -32,7 +32,7 @@ div {
 
 .div_Title {
   /* flex: 0.3; */
-  height: 50px;
+  height: 26px;
   border: 0;
   text-align: right;
   background-color: cornflowerblue;
@@ -40,7 +40,7 @@ div {
 
 .div_Body {
   /* flex: 0.7; */
-  height: calc(100% - 50px);
+  height: calc(100% - 26px);
   border: 0;
   width: 100%;
   text-align: center;  
@@ -60,7 +60,7 @@ div {
   position: absolute;
   z-index: 1;
   /* touch-action: cross-slide-x;   */
-  background-color: red;
+  background-color: pink;
 }
 
 .div_Row {
@@ -76,5 +76,5 @@ div {
   position: absolute;
   z-index: 1;
   /* touch-action: cross-slide-y;   */
-  background-color: red;
+  background-color: pink;
 }

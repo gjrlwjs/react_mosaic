@@ -59,7 +59,7 @@ div {
 
   position: absolute;
   z-index: 1;
-  /* touch-action: none;   */
+  /* touch-action: cross-slide-x;   */
   background-color: red;
 }
 
@@ -75,6 +75,6 @@ div {
 
   position: absolute;
   z-index: 1;
-  /* touch-action: none;   */
+  /* touch-action: cross-slide-y;   */
   background-color: red;
 }

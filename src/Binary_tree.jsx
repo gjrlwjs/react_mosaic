@@ -247,14 +247,14 @@ export class Binary_Tree {
           // C = Col = 가로 = left / right
           let tmp_width = (100 - (tmp_node.inset_left + tmp_node.inset_right));
 
-          tmp_left.inset_right = tmp_left.inset_right + (tmp_width * (       tmp_left.ratio  / 100));
-          tmp_right.inset_left = tmp_right.inset_left + (tmp_width * ((100 - tmp_left.ratio) / 100)); //tmp_right.ratio / 100));
+          tmp_left.inset_right = tmp_left.inset_right + (tmp_width * ((100 - tmp_left.ratio)  / 100));
+          tmp_right.inset_left = tmp_right.inset_left + (tmp_width * ((100 - tmp_right.ratio) / 100)); //tmp_right.ratio / 100));
         } else {
           // R = Row = 세로 = top / bottom
           let tmp_height = (100 - (tmp_node.inset_top + tmp_node.inset_bottom));
 
-          tmp_left.inset_bottom = tmp_left.inset_bottom + (tmp_height * (       tmp_left.ratio  / 100));
-          tmp_right.inset_top   = tmp_right.inset_top   + (tmp_height * ((100 - tmp_left.ratio) / 100)); //tmp_right.ratio / 100));
+          tmp_left.inset_bottom = tmp_left.inset_bottom + (tmp_height * ((100 - tmp_left.ratio)  / 100));
+          tmp_right.inset_top   = tmp_right.inset_top   + (tmp_height * ((100 - tmp_right.ratio) / 100)); //tmp_right.ratio / 100));
         }
       }
 //      console.log(tmp_node);

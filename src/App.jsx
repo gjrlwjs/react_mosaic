@@ -71,13 +71,74 @@ function App() {
     console.log(arr);
   };
 
-  const onmousedown_event = (e) => {
-    // 기존 배열에서 inset 값을 변경 후 가져와야한다.
+  const onMouseDown_event = (e) => {
+    console.log("==============Down=============");  
+    // 마우스 다운 이벤트 발생 => 마우스의 움직임에 따라, onMouseMove 이벤트를 유지한다(onMouseUp이 될 때까지 or onMouseLeave)
+    // 마우스 움직임에 따른 이벤트 등록
+    const bar = e.target;
+    bar.addEventListener('drag',      onMouseDrag_Event);
+    bar.addEventListener('dragend',   onMouseDragend_Event);
 
-    // setArr(arr.filter((x) => x .key!== k));
-    // console.log(arr);
-    console.log("==============mouse down=============");
-    console.log(e);
+    function onMouseDrag_Event(event) {
+      console.log("==============Drag=============");
+      // console.log(event);
+
+      // 배율 변경
+      if (event.x > 0 || event.y > 0) {
+        // 부모노드와 자식노드에 대한 내용을 변수에 받아온다.
+        let tmp_p = arr[parseInt(e.target.getAttribute('name'))];
+        let tmp_l = tmp_p.left;
+        let tmp_r = tmp_p.right;
+
+        // 현재 마우스의 좌표를 기준으로, 몇퍼센트인지 역계산을 해줘야한다.
+        // 대상의 부모의 Width와 Left 좌표값을 가지고 계산하면 된다.
+        // ((마우스의 현재 좌표 - 기준좌표)  / 부모의 길이) * 100
+        // 부모의 div type이 C | R 에 따라 다르다.
+        if (tmp_p.div_type === "C") {
+          tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / window.innerWidth)  * 100;
+        } else {
+          tmp_l.ratio = ((event.clientY - (tmp_p.inset_top  * (window.innerHeight / 100))) / window.innerHeight) * 100;
+        }
+        tmp_r.ratio = 100 - tmp_l.ratio;
+
+        // inset 재조정
+        bst.resize_div(arr);
+
+        // 배열 갱신
+        setArr([...arr]);        
+
+        // console.log("=============client 좌표");
+        // console.log(event.clientX + " / " + event.clientY);
+      };
+
+      // let newLeft = event.clientX - shiftX - slider.getBoundingClientRect().left;
+
+      // // the pointer is out of slider => lock the thumb within the bounaries
+      // if (newLeft < 0) {
+      //   newLeft = 0;
+      // }
+      // let rightEdge = slider.offsetWidth - thumb.offsetWidth;
+      // if (newLeft > rightEdge) {
+      //   newLeft = rightEdge;
+      // }
+
+      // thumb.style.left = newLeft + 'px';
+    }
+
+    function onMouseDragend_Event() {
+      console.log("==============Up=============");
+
+      bar.removeEventListener('drag',    onMouseDrag_Event);
+      bar.removeEventListener('dragend', onMouseDragend_Event);
+
+      console.log(arr);
+
+      // // inset 재조정
+      // bst.resize_div(arr);
+
+      // // 배열 갱신
+      // setArr([...arr]);
+    }    
   };
 
   return (
@@ -90,13 +151,13 @@ function App() {
                 {/* Col or Row 바를 생성한다(Right Node 기준으로) */}
                 {e.div_type === "C" && (
                   <div 
-                    className="div_Col" name={e.id}// id={e.id} onMouseDown={onmousedown_event(e)}
+                    className="div_Col" name={e.id} draggable="true" onMouseDown={onMouseDown_event} // onMouseDown={()=>{onmouseDown_event(this)}} id={e.id} 
                     style={{ inset: `${e.right.inset_top}% ${e.right.inset_right}% ${e.right.inset_bottom}% ${e.right.inset_left}%` }}></div>
                   )
                 }
                 {e.div_type === "R" && (
                   <div 
-                    className="div_Row" name={e.id} id={e.id} 
+                    className="div_Row" name={e.id} draggable="true" onMouseDown={onMouseDown_event} //id={e.id} 
                     style={{ inset: `${e.right.inset_top}% ${e.right.inset_right}% ${e.right.inset_bottom}% ${e.right.inset_left}%` }}></div>
                   )
                 }
@@ -109,7 +170,7 @@ function App() {
                       style={{ inset: `${e.left.inset_top}% ${e.left.inset_right}% ${e.left.inset_bottom}% ${e.left.inset_left}%` }}
                     >
                       <div className="div_Title">
-                        <button onClick={Add_Div} key={e.left.id} id={e.left.id}>
+                        <button onClick={Add_Div} id={e.left.id}>
                           추가
                         </button>
                         <button onClick={()=>{Del_Div(e.left)}}>삭제</button>
@@ -125,7 +186,7 @@ function App() {
                     style={{ inset: `${e.right.inset_top}% ${e.right.inset_right}% ${e.right.inset_bottom}% ${e.right.inset_left}%` }}
                     >
                     <div className="div_Title">
-                      <button onClick={Add_Div} key={e.right.id} id={e.right.id}>
+                      <button onClick={Add_Div} id={e.right.id}>
                         추가
                       </button>
                       <button onClick={()=>{Del_Div(e.right)}}>삭제</button>
@@ -143,7 +204,7 @@ function App() {
                 style={{ inset: `${e.inset_top}% ${e.inset_right}% ${e.inset_bottom}% ${e.inset_left}%` }}
               >
                 <div className="div_Title">
-                  <button onClick={Add_Div} key={e.id} id={e.id}>
+                  <button onClick={Add_Div} id={e.id}>
                     추가
                   </button>
                   <button onClick={()=>{Del_Div(e)}}>삭제</button>
@@ -155,61 +216,6 @@ function App() {
         }
       )}
     </>
-
-
-
-
-
-
-
-
-
-
-    // <>
-    //   {arr.map((e) => {
-    //     // node_type이 P를 만나면 바 Div를 생성해줘야 한다.
-    //     // 이때, 자식 노드에서 비율을 가져와서 inset 값을 설정해 줘야 한다.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //     if (e.node_type === "C") {
-    //       // console.log(arr);
-
-    //       return (
-    //         // 가로와 세로의 길이를 비교해서 Float 를 설정한다 (None / Left or Right)
-    //         <div
-    //           className="div_Background" key={e.id} id={e.id}
-    //           style={{ inset: `${e.inset_top}% ${e.inset_right}% ${e.inset_bottom}% ${e.inset_left}%` }}
-    //         >
-    //           <div className="div_Title">
-    //             <button onClick={Add_Div} key={e.id} id={e.id}>
-    //               추가
-    //             </button>
-    //             <button onClick={()=>{Del_Div(e)}}>삭제</button>
-    //           </div>
-    //           <div className="div_Body">{e.node_text}</div>
-    //         </div>
-    //         // <div className="div_Col" draggable = "true"></div>
-    //       );
-    //     }
-
-
-
-
-    //   })}
-    // </>
   );
 }
 
@@ -404,3 +410,31 @@ export default App;
 
   // const [arr, setArr] = useState(inset_value);
   // const [idx, setIdx] = useState(1);
+
+
+
+      // const dragStart = (e) => {
+    //   if (e.type === "touchstart") {
+    //     initialX = e.touches[0].clientX - xOffset;
+    //     initialY = e.touches[0].clientY - yOffset;
+    //   } else {
+    //     initialX = e.clientX - xOffset;
+    //     initialY = e.clientY - yOffset;
+    //   }
+
+    //   if (e.target === dragItem) {
+    //     active = true;
+    //   }
+    // }
+    // bar.addEventListener("mousedown", dragStart, false);
+
+    // const bar = e.target;
+    // bar.addEventListener("dragstart", (k) => {
+    // bar.addEventListener("drag", (k) => {
+    //   console.log("드래그 하면 발생하는 이벤트");
+    //   console.log(k);
+    // });
+    // console.log("==============mouse down=============");
+    // console.log(e);
+
+

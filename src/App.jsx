@@ -3,6 +3,7 @@ import { useState } from "react";
 import "./App.css";
 import { Node } from "./Binary_tree";
 import { Binary_Tree } from "./Binary_tree";
+import { PercentToLength } from "./ufunction";
 
 const bst = new Binary_Tree();
 let idx = 0;
@@ -12,26 +13,20 @@ function App() {
   const [arr, setArr] = useState([]);
 
   if (bst.root === null) {
+    console.log("===========Root 생성===========");
     bst.root = new Node(idx, "N", "C", "windows " + (node_text_idx + 1), 0, 0, 0, 0, 100);
-    // console.log("===========arr 추가===========");
     //arr.push(bst.root);
     node_text_idx = node_text_idx + 1;
     setArr([bst.root]);
-    // setIdx(idx + 1);
-    // console.log(arr);
-    // console.log("==================================================");
+
+    console.log(arr);
   };
 
   const Add_Div = (e) => {
     // TODO inset 계산
-    // let tmp_index = arr.findIndex((tmp_item) => tmp_item.key === e.target.id);
-    // // console.log(tmp_index);
-    // console.log('초기 Arr 확인');
-    // console.log(arr);
+    console.log('===========DIV 추가===========');
 
     // 0을 1|2로 Div 추가하기
-    // const node2 = bst.insert(bst.root, arr.length, arr);
-    // console.log("e 로그 = " + e.target.id);
     const insert_result = bst.insert(arr[e.target.id], arr.length, node_text_idx);
 
     if (insert_result) {
@@ -44,17 +39,14 @@ function App() {
 
     //setArr([...arr]);
     // setIdx(idx + 1);
-    console.log('현재 Arr ===============');
     console.log(arr);
   };
 
   // filter를 써서 새 배열 만들고 arr배열을 변경해줘야함.
   const Del_Div = (e) => {
-    // 기존 배열에서 inset 값을 변경 후 가져와야한다.
+    console.log('===========DIV 삭제===========');
 
-    // setArr(arr.filter((x) => x .key!== k));
-    // console.log(arr);
-    // console.log(e);
+    // 기존 배열에서 inset 값을 변경 후 가져와야한다.
     if (arr[arr[arr[e.id].p_id].p_id]) {
       bst.remove(arr[arr[arr[e.id].p_id].p_id], arr[arr[e.id].p_id], arr[e.id]);
     } else {
@@ -67,7 +59,6 @@ function App() {
     // 배열 갱신
     setArr([...arr]);
 
-    console.log('현재 Arr ===============');
     console.log(arr);
   };
 
@@ -95,9 +86,11 @@ function App() {
         // ((마우스의 현재 좌표 - 기준좌표)  / 부모의 길이) * 100
         // 부모의 div type이 C | R 에 따라 다르다.
         if (tmp_p.div_type === "C") {
-          tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / (window.innerWidth))  * 100;
+          // tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / (window.innerWidth))  * 100;
+          tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / (PercentToLength(window.innerWidth, tmp_p.inset_left, tmp_p.inset_right)))  * 100;
         } else {
-          tmp_l.ratio = ((event.clientY - (tmp_p.inset_top  * (window.innerHeight / 100))) / (window.innerHeight)) * 100;
+          // tmp_l.ratio = ((event.clientY - (tmp_p.inset_top  * (window.innerHeight / 100))) / (window.innerHeight)) * 100;
+          tmp_l.ratio = ((event.clientY - (tmp_p.inset_top * (window.innerHeight  / 100))) / (PercentToLength(window.innerHeight, tmp_p.inset_top, tmp_p.inset_bottom))) * 100;
         }
         tmp_r.ratio = 100 - tmp_l.ratio;
 

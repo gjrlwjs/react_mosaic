@@ -18,6 +18,14 @@ div {
   display: block;
 }
 
+button {
+  margin-top: 5px;
+  margin-right: 6px;
+
+  width: 60px;
+  height: 30px;
+}
+
 #root{
   height: 100%;
 }
@@ -32,7 +40,7 @@ div {
 
 .div_Title {
   /* flex: 0.3; */
-  height: 26px;
+  height: 40px;
   border: 0;
   text-align: right;
   background-color: cornflowerblue;
@@ -40,7 +48,7 @@ div {
 
 .div_Body {
   /* flex: 0.7; */
-  height: calc(100% - 26px);
+  height: calc(100% - 40px);
   border: 0;
   width: 100%;
   text-align: center;  

@@ -5,6 +5,11 @@ import { Node } from "./Binary_tree";
 import { Binary_Tree } from "./Binary_tree";
 import { PercentToLength } from "./ufunction";
 
+const TOUCH_EVENT_OPTIONS = {
+  capture: true,
+  passive: false,
+};
+
 const bst = new Binary_Tree();
 let idx = 0;
 let node_text_idx = 0;
@@ -70,8 +75,8 @@ function App() {
     bar.addEventListener('drag',    onMouseDrag_bar_event);
     bar.addEventListener('dragend', onMouseDragend_bar_event);
 
-    bar.addEventListener("touchmove", onMouseDrag_bar_event,false);
-    bar.addEventListener("touchend", onMouseDragend_bar_event, false);
+    bar.addEventListener("touchmove", onMouseDrag_bar_event, TOUCH_EVENT_OPTIONS);
+    bar.addEventListener("touchend", onMouseDragend_bar_event, true);
   
     function onMouseDrag_bar_event(event) {
       console.log("==============Bar Drag=============");
@@ -114,8 +119,8 @@ function App() {
       bar.removeEventListener('drag',    onMouseDrag_bar_event);
       bar.removeEventListener('dragend', onMouseDragend_bar_event);
 
-      bar.removeEventListener("touchmove", onMouseDrag_bar_event,false);
-      bar.removeEventListener("touchend", onMouseDragend_bar_event, false);
+      bar.removeEventListener("touchmove", onMouseDrag_bar_event,TOUCH_EVENT_OPTIONS);
+      bar.removeEventListener("touchend", onMouseDragend_bar_event, true);
 
       console.log(arr);
 

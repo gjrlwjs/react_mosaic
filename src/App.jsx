@@ -70,6 +70,9 @@ function App() {
     bar.addEventListener('drag',    onMouseDrag_bar_event);
     bar.addEventListener('dragend', onMouseDragend_bar_event);
 
+    bar.addEventListener("touchmove", onMouseDrag_bar_event,false);
+    bar.addEventListener("touchend", onMouseDragend_bar_event, false);
+  
     function onMouseDrag_bar_event(event) {
       console.log("==============Bar Drag=============");
       // console.log(event);
@@ -110,6 +113,9 @@ function App() {
 
       bar.removeEventListener('drag',    onMouseDrag_bar_event);
       bar.removeEventListener('dragend', onMouseDragend_bar_event);
+
+      bar.removeEventListener("touchmove", onMouseDrag_bar_event,false);
+      bar.removeEventListener("touchend", onMouseDragend_bar_event, false);
 
       console.log(arr);
 
@@ -192,7 +198,7 @@ function App() {
                 {/* Col or Row 바를 생성한다(Right Node 기준으로) */}
                 {e.div_type === "C" && (
                   <div 
-                    className="div_Col" name={e.id} draggable="true" onMouseDown={onMouseDown_bar_event} // onMouseDown={()=>{onmouseDown_event(this)}} id={e.id} 
+                    className="div_Col" name={e.id} draggable="true" onMouseDown={onMouseDown_bar_event} onTouchStart={onMouseDown_bar_event}// onMouseDown={()=>{onmouseDown_event(this)}} id={e.id} 
                     style={{ inset: `${e.right.inset_top}% ${e.right.inset_right}% ${e.right.inset_bottom}% ${e.right.inset_left}%` }}></div>
                   )
                 }

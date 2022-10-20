@@ -204,9 +204,9 @@ const onDragStart_div_event = (e) => {
     else                                                 {drag_bleft = false}
 
     // 현재 마우스의 X, Y 좌표에 따라, 어떤 구역에 속해있는지 확인해서 쉐도우 DIV를 뿌려준다.
-    console.log(tmp_position);
-    console.log(drag_state);
-    console.log(drag_bleft);
+    // console.log(tmp_position);
+    // console.log(drag_state);
+    // console.log(drag_bleft);
   }  
 
   const onDrop_div_event = (e) => {  

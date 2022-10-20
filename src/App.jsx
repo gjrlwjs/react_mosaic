@@ -3,12 +3,15 @@ import { useState } from "react";
 import "./App.css";
 import { Node } from "./Binary_tree";
 import { Binary_Tree } from "./Binary_tree";
-import { PercentToLength, PercentToPx } from "./ufunction";
+import { PercentToLength, PercentToPx, Position_Check, Position_Fix } from "./ufunction";
 
 const bst = new Binary_Tree();
 let idx = 0;
 let node_text_idx = 0;
-let drag_node = null;
+
+let drag_node = null;                 // Null or Node
+let drag_state = "N";                 // N / T / R / B / L
+let drag_bleft = false;               // T = Left / F = Right
 
 function App() {
   const [arr, setArr] = useState([]);
@@ -23,6 +26,9 @@ function App() {
     console.log(arr);
   };
 
+// ==================================================================================================================================================
+// =================================================================== Button Event =================================================================
+// ==================================================================================================================================================
   const Add_Div = (e) => {
     // TODO inset 계산
     console.log('===========DIV 추가===========');
@@ -45,6 +51,10 @@ function App() {
 
   // filter를 써서 새 배열 만들고 arr배열을 변경해줘야함.
   const Del_Div = (e) => {
+    if (arr[e.id].p_id === null){
+      return false;
+    }
+
     console.log('===========DIV 삭제===========');
 
     // 기존 배열에서 inset 값을 변경 후 가져와야한다.
@@ -63,6 +73,9 @@ function App() {
     console.log(arr);
   };
 
+// ==================================================================================================================================================
+// =================================================================== Bar Event ====================================================================
+// ==================================================================================================================================================
   const onMouseDown_bar_event = (e) => {
     drag_node = null;
 
@@ -130,20 +143,20 @@ function App() {
     }    
   };
 
-
-
-
-  const onDragStart_div_event = (e) => {
+// ==================================================================================================================================================
+// =================================================================== Div Event ====================================================================
+// ==================================================================================================================================================
+const onDragStart_div_event = (e) => {
     console.log("==============Div Drag Start=============");  
-    console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
+    //console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
     //console.log(e.target);
-
-    drag_node = arr[parseInt(e.target.parentElement.getAttribute("name"))];
-    // 마우스 Over 이벤트 발생 => 마우스의 움직임에 따라, onMouseMove 이벤트를 유지한다(onMouseUp이 될 때까지 or onMouseLeave)
-    // 마우스 움직임에 따른 이벤트 등록
     // e.preventDefault();
+    // console.log(drag_node);
 
-    console.log(drag_node);
+    // 마우스 Over 이벤트 발생 => 마우스의 움직임에 따라, onMouseMove 이벤트를 유지한다(onMouseUp이 될 때까지 or onMouseLeave)
+    drag_node  = arr[parseInt(e.target.parentElement.getAttribute("name"))];
+    drag_state = "N";
+    drag_bleft = false;
   }
 
   const onDragOver_div_event = (e) => {  
@@ -153,12 +166,47 @@ function App() {
 
     e.preventDefault();
 
-    console.log("==============Drag Over=============");
-    console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
+    let tmp_node = arr[parseInt(e.target.parentElement.getAttribute("name"))];
+
+    let point_x      = PercentToPx(window.innerWidth,  tmp_node.inset_left);
+    let point_y      = PercentToPx(window.innerHeight, tmp_node.inset_top);
+    let point_width  = PercentToLength(window.innerWidth,  tmp_node.inset_left, tmp_node.inset_right);
+    let point_height = PercentToLength(window.innerHeight, tmp_node.inset_top,  tmp_node.inset_bottom);
+
+    // console.log("==============Drag Over=============");
+    // console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
     //console.log(e.target);
 
-    // 현재 마우스의 X, Y 좌표에 따라, 어떤 구역에 속해있는지 확인해서 쉐도우 DIV를 뿌려준다.
+    // 마우스 움직임에 따른 이벤트 
+    // target의 영역 기준으로 마우스 좌표가 9등분 중에 어디에 속해있는지 확인해야한다.
+    // Left(x) / Top(y) / Width(px) / Height(px)을 입력하면 LT ~ RB(1 ~ 9) 중에 어디인지 반환해준다.
+    let tmp_width_length  = (point_width  * 0.33);
+    let tmp_height_length = (point_height * 0.33);
 
+    let result_X = Position_Check(e.clientX, point_x, tmp_width_length);
+    let result_Y = Position_Check(e.clientY, point_y, tmp_height_length);    
+
+    // point_width 의 위치를 찾고, 결정한다.
+    let tmp_position = Position_Fix(result_X, result_Y);
+
+    // 겹치는 부분이 있으면 좀 다르게 처리해야함.
+    if        (tmp_position === "LT") {
+      if (drag_state !== "T") {drag_state = "L"}
+    } else if (tmp_position === "RT") {
+      if (drag_state !== "T") {drag_state = "R"}
+    } else if (tmp_position === "LB") {
+      if (drag_state !== "B") {drag_state = "L"}
+    } else if (tmp_position === "RB") {
+      if (drag_state !== "B") {drag_state = "R"}
+    } else                    {drag_state = tmp_position}
+
+    if ((tmp_position === "L") || (tmp_position === "T")){drag_bleft = true}
+    else                                                 {drag_bleft = false}
+
+    // 현재 마우스의 X, Y 좌표에 따라, 어떤 구역에 속해있는지 확인해서 쉐도우 DIV를 뿌려준다.
+    console.log(tmp_position);
+    console.log(drag_state);
+    console.log(drag_bleft);
   }  
 
   const onDrop_div_event = (e) => {  
@@ -170,34 +218,50 @@ function App() {
 
     console.log("==============Drop=============");
     console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
-    console.log(arr[parseInt(e.target.parentElement.getAttribute("name"))]);
+    console.log(e.target);
 
-    // 위치에 따라, Col | Row   /   Left | Right 를 지정하여 Insert / remove 해줘야한다.
-    const change_result = bst.change(arr[parseInt(e.target.parentElement.getAttribute("name"))], arr.length, drag_node, "R", false);
-
-    if (change_result) {
-      idx = idx + 2;
-      node_text_idx = node_text_idx + 1;
-
-      arr.push(change_result[0]);
-      arr.push(change_result[1]);
-      //setArr([...arr, change_result[0], change_result[1]]);
-    };
-
-    // 기존 배열에서 inset 값을 변경 후 가져와야한다.
-    if (arr[arr[arr[drag_node.id].p_id].p_id]) {
-      bst.remove(arr[arr[arr[drag_node.id].p_id].p_id], arr[arr[drag_node.id].p_id], arr[drag_node.id]);
-    } else {
-      bst.remove(null, arr[arr[drag_node.id].p_id], arr[drag_node.id]);
-    } 
-
-    // inset 재조정
-    bst.resize_div(arr);
-
-    // 배열 갱신
-    setArr([...arr]);
+    if (e.target.tagName !== "BUTTON") {
+      if (drag_node.id !== parseInt(e.target.parentElement.getAttribute("name"))) {
+        // 위치에 따라, Col | Row   /   Left | Right 를 지정하여 Insert / remove 해줘야한다.
+        const change_result = bst.change(arr[parseInt(e.target.parentElement.getAttribute("name"))], arr.length, drag_node, drag_state, drag_bleft);
+  
+        if (change_result) {
+          idx = idx + 2;
+          // node_text_idx = node_text_idx + 1;
+  
+          arr.push(change_result[0]);
+          arr.push(change_result[1]);
+          // setArr([...arr, change_result[0], change_result[1]]);
+        };
+  
+        // 기존 배열에서 inset 값을 변경 후 가져와야한다.
+        if (arr[arr[arr[drag_node.id].p_id].p_id]) {
+          bst.remove(arr[arr[arr[drag_node.id].p_id].p_id], arr[arr[drag_node.id].p_id], arr[drag_node.id]);
+        } else {
+          bst.remove(null, arr[arr[drag_node.id].p_id], arr[drag_node.id]);
+        } 
+        // drag_node = null;
+        // inset 재조정
+        bst.resize_div(arr);
+  
+        console.log("==============Drop after Log=============");
+        console.log(drag_node);
+        console.log(drag_state);
+        console.log(drag_bleft);
+        console.log(arr);
+  
+        // 배열 갱신
+        setArr([...arr]);
+      }
+    }
+    drag_node  = null;
+    drag_state = "N";
+    drag_bleft = false;
   }
 
+// ==================================================================================================================================================
+// ================================================================= 반환값(랜더링) ==================================================================
+// ==================================================================================================================================================
   return (
     <>
       {arr.map(

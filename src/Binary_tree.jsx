@@ -129,8 +129,8 @@ export class Binary_Tree {
     // 부모 node 정보를 불러와서 left, right 로 분류하여 추가해준다.(기존 Left, 신규 Right)
     // const old_node = this.find_node(parent_id);
     const old_node   = parent_node;
-    const left_node  = new Node(new_id,     "N", "C", old_node.node_text,    0, 0, 0, 0, 50, old_node.id);
-    const right_node = new Node(new_id + 1, "N", "C", change_node.node_text, 0, 0, 0, 0, 50, old_node.id);
+    const left_node  = new Node(new_id,     "N", "C", "", 0, 0, 0, 0, 50, old_node.id);
+    const right_node = new Node(new_id + 1, "N", "C", "", 0, 0, 0, 0, 50, old_node.id);
 
     if (bLeft === true) {
       left_node.node_text  = change_node.node_text;
@@ -143,7 +143,11 @@ export class Binary_Tree {
     // target 노드를 찾아왔으니, Left Right 값을 입력한다.
     if (old_node) {
       // 기존 old도 값을 바꿔주고
-      old_node.div_type  = display_type;
+      if ((display_type === "L") || (display_type === "R")) {
+        old_node.div_type  = "C";
+      } else {
+        old_node.div_type  = "R";
+      }
       old_node.node_type = "P";
       old_node.node_text = "";
 

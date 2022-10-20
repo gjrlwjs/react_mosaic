@@ -7,12 +7,64 @@ export function PercentToLength(aDefd_Length, aPer_1, aPer_2) {
   return (aDefd_Length * ((100 - (aPer_1 + aPer_2)) / 100));
 }
 
-export function PercentToPx(aDefd_Length, aPer) {
+export function PercentToPx(aDef_Length, ainset) {
   // inset의 Percent는 각기 기준이 다르다.
-  // ex) Left(Top)     = 30% 이면, 좌측으로부터 30%만큼 떨어져있다는 뜻.
-  //     Right(Bottom) = 40% 이면, 우측으로부터 40%만큼 떨어져있다는 뜻.
   // Left와 Top의 퍼센트를 길이화 하면 기준 좌표가 나온다.
-  return (aDefd_Length * (aPer / 100));
+  return (aDef_Length * (ainset / 100));
+}
+
+export function Position_Check(aClientX, aPoint, aLength) {
+  // 위치를 체크해서 반환해준다.
+  if        ( (aClientX - aPoint) <= aLength) {
+    //  0 ~ 33%   = LT / L / LB
+    return 0;
+  } else if (((aClientX - aPoint) > aLength) && ((aClientX - aPoint) <= (aLength * 2))) {
+    // 34 ~ 66%   =  T / M / B
+    return 1;
+  } else {
+    // 67 ~ 100%  = RT / R / RB
+    return 2;
+  }
+}
+
+export function Position_Fix(aResult_X, aResult_Y) {
+  switch (aResult_X) {
+    case 0:
+      switch (aResult_Y) {
+        case 0:
+          return "LT";
+        case 1:
+          return "L";
+        case 2:
+          return "LB";
+        default:
+          return "N";
+      }          
+    case 1:
+      switch (aResult_Y) {
+        case 0:
+          return "T";
+        case 1:
+          return "N";
+        case 2:
+          return "B";
+        default:
+          return "N";
+      }          
+    case 2:
+      switch (aResult_Y) {
+        case 0:
+          return "RT";
+        case 1:
+          return "R";
+        case 2:
+          return "RB";
+        default:
+          return "N";
+      }          
+    default:
+      return "N";
+  }
 }
 
 export const dot_point = {
@@ -32,5 +84,5 @@ export function isInside_Triangle(p1, p2, p3, mp) {
 	let BB = calc_Triangle(p1, mp, p3);
 	let CC = calc_Triangle(p1, p2, mp);
 
-	return (NN == AA + BB + CC);
+	return (NN === AA + BB + CC);
 }

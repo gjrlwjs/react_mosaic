@@ -29,6 +29,11 @@ button {
 #root{
   height: 100%;
 }
+
+.draggable.dragging {
+  opacity: 0.5;
+}
+
 .div_Background {
   /* flex: 1; */
   border: 3px;

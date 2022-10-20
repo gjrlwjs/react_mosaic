@@ -3,16 +3,12 @@ import { useState } from "react";
 import "./App.css";
 import { Node } from "./Binary_tree";
 import { Binary_Tree } from "./Binary_tree";
-import { PercentToLength } from "./ufunction";
-
-const TOUCH_EVENT_OPTIONS = {
-  capture: true,
-  passive: false,
-};
+import { PercentToLength, PercentToPx } from "./ufunction";
 
 const bst = new Binary_Tree();
 let idx = 0;
 let node_text_idx = 0;
+let drag_node = null;
 
 function App() {
   const [arr, setArr] = useState([]);
@@ -68,6 +64,8 @@ function App() {
   };
 
   const onMouseDown_bar_event = (e) => {
+    drag_node = null;
+
     console.log("==============Bar Down=============");  
     // 마우스 다운 이벤트 발생 => 마우스의 움직임에 따라, onMouseMove 이벤트를 유지한다(onMouseUp이 될 때까지 or onMouseLeave)
     // 마우스 움직임에 따른 이벤트 등록
@@ -75,8 +73,8 @@ function App() {
     bar.addEventListener('drag',    onMouseDrag_bar_event);
     bar.addEventListener('dragend', onMouseDragend_bar_event);
 
-    bar.addEventListener("touchmove", onMouseDrag_bar_event, TOUCH_EVENT_OPTIONS);
-    bar.addEventListener("touchend", onMouseDragend_bar_event, true);
+    // bar.addEventListener("touchmove", onMouseDrag_bar_event, TOUCH_EVENT_OPTIONS);
+    // bar.addEventListener("touchend", onMouseDragend_bar_event, true);
   
     function onMouseDrag_bar_event(event) {
       console.log("==============Bar Drag=============");
@@ -119,8 +117,8 @@ function App() {
       bar.removeEventListener('drag',    onMouseDrag_bar_event);
       bar.removeEventListener('dragend', onMouseDragend_bar_event);
 
-      bar.removeEventListener("touchmove", onMouseDrag_bar_event,TOUCH_EVENT_OPTIONS);
-      bar.removeEventListener("touchend", onMouseDragend_bar_event, true);
+      // bar.removeEventListener("touchmove", onMouseDrag_bar_event,TOUCH_EVENT_OPTIONS);
+      // bar.removeEventListener("touchend", onMouseDragend_bar_event, true);
 
       console.log(arr);
 
@@ -135,63 +133,70 @@ function App() {
 
 
 
+  const onDragStart_div_event = (e) => {
+    console.log("==============Div Drag Start=============");  
+    console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
+    //console.log(e.target);
 
-  const onMouseDown_div_event = (e) => {
-    console.log("==============Div Down=============");  
-    // 마우스 다운 이벤트 발생 => 마우스의 움직임에 따라, onMouseMove 이벤트를 유지한다(onMouseUp이 될 때까지 or onMouseLeave)
+    drag_node = arr[parseInt(e.target.parentElement.getAttribute("name"))];
+    // 마우스 Over 이벤트 발생 => 마우스의 움직임에 따라, onMouseMove 이벤트를 유지한다(onMouseUp이 될 때까지 or onMouseLeave)
     // 마우스 움직임에 따른 이벤트 등록
-    const tmp_div = e.target;
-    tmp_div.addEventListener('drag',    onMouseDrag_div_event);
-    tmp_div.addEventListener('dragend', onMouseDragend_div_event);
+    // e.preventDefault();
 
-    function onMouseDrag_div_event(event) {
-      console.log("==============Div Drag=============");
-      // console.log(event);
+    console.log(drag_node);
+  }
 
-      // 배율 변경
-      if (event.x > 0 || event.y > 0) {
-        // 부모노드와 자식노드에 대한 내용을 변수에 받아온다.
-        let tmp_p = arr[parseInt(e.target.getAttribute('name'))];
-        let tmp_l = tmp_p.left;
-        let tmp_r = tmp_p.right;
-
-        // 현재 마우스의 좌표를 기준으로, 몇퍼센트인지 역계산을 해줘야한다.
-        // 대상의 부모의 Width와 Left 좌표값을 가지고 계산하면 된다.
-        // ((마우스의 현재 좌표 - 기준좌표)  / 부모의 길이) * 100
-        // 부모의 div type이 C | R 에 따라 다르다.
-        if (tmp_p.div_type === "C") {
-          // tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / (window.innerWidth))  * 100;
-          tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / (PercentToLength(window.innerWidth, tmp_p.inset_left, tmp_p.inset_right)))  * 100;
-        } else {
-          // tmp_l.ratio = ((event.clientY - (tmp_p.inset_top  * (window.innerHeight / 100))) / (window.innerHeight)) * 100;
-          tmp_l.ratio = ((event.clientY - (tmp_p.inset_top * (window.innerHeight  / 100))) / (PercentToLength(window.innerHeight, tmp_p.inset_top, tmp_p.inset_bottom))) * 100;
-        }
-        tmp_r.ratio = 100 - tmp_l.ratio;
-
-        // inset 재조정
-        bst.resize_div(arr);
-
-        // 배열 갱신
-        setArr([...arr]);
-
-        // console.log("=============client 좌표");
-        // console.log(event.clientX + " / " + event.clientY);
-      };
+  const onDragOver_div_event = (e) => {  
+    if (drag_node === null) {
+      return false;
     }
 
-    function onMouseDragend_div_event() {
-      console.log("==============Div Up=============");
+    e.preventDefault();
 
-      tmp_div.removeEventListener('drag',    onMouseDrag_div_event);
-      tmp_div.removeEventListener('dragend', onMouseDragend_div_event);
+    console.log("==============Drag Over=============");
+    console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
+    //console.log(e.target);
 
-      console.log(arr);
+    // 현재 마우스의 X, Y 좌표에 따라, 어떤 구역에 속해있는지 확인해서 쉐도우 DIV를 뿌려준다.
+
+  }  
+
+  const onDrop_div_event = (e) => {  
+    if (drag_node === null) {
+      return false;
     }
-  };
 
+    e.preventDefault();
 
+    console.log("==============Drop=============");
+    console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
+    console.log(arr[parseInt(e.target.parentElement.getAttribute("name"))]);
 
+    // 위치에 따라, Col | Row   /   Left | Right 를 지정하여 Insert / remove 해줘야한다.
+    const change_result = bst.change(arr[parseInt(e.target.parentElement.getAttribute("name"))], arr.length, drag_node, "R", false);
 
+    if (change_result) {
+      idx = idx + 2;
+      node_text_idx = node_text_idx + 1;
+
+      arr.push(change_result[0]);
+      arr.push(change_result[1]);
+      //setArr([...arr, change_result[0], change_result[1]]);
+    };
+
+    // 기존 배열에서 inset 값을 변경 후 가져와야한다.
+    if (arr[arr[arr[drag_node.id].p_id].p_id]) {
+      bst.remove(arr[arr[arr[drag_node.id].p_id].p_id], arr[arr[drag_node.id].p_id], arr[drag_node.id]);
+    } else {
+      bst.remove(null, arr[arr[drag_node.id].p_id], arr[drag_node.id]);
+    } 
+
+    // inset 재조정
+    bst.resize_div(arr);
+
+    // 배열 갱신
+    setArr([...arr]);
+  }
 
   return (
     <>
@@ -203,7 +208,7 @@ function App() {
                 {/* Col or Row 바를 생성한다(Right Node 기준으로) */}
                 {e.div_type === "C" && (
                   <div 
-                    className="div_Col" name={e.id} draggable="true" onMouseDown={onMouseDown_bar_event} onTouchStart={onMouseDown_bar_event}// onMouseDown={()=>{onmouseDown_event(this)}} id={e.id} 
+                    className="div_Col" name={e.id} draggable="true" onMouseDown={onMouseDown_bar_event} //onTouchStart={onMouseDown_bar_event}
                     style={{ inset: `${e.right.inset_top}% ${e.right.inset_right}% ${e.right.inset_bottom}% ${e.right.inset_left}%` }}></div>
                   )
                 }
@@ -218,10 +223,10 @@ function App() {
                 {e.left.node_type === "C" && 
                   (
                     <div
-                      className="div_Background" //key={e.left.id} id={e.left.id}
+                      className="div_Background" name={e.left.id} onDragOver={onDragOver_div_event} onDrop={onDrop_div_event}
                       style={{ inset: `${e.left.inset_top}% ${e.left.inset_right}% ${e.left.inset_bottom}% ${e.left.inset_left}%` }}
                     >
-                      <div className="div_Title" name={e.id} draggable="true" onMouseDown={onMouseDown_div_event}>
+                      <div className="div_Title" draggable="true" onDragStart={onDragStart_div_event}>
                         <button onClick={Add_Div} id={e.left.id}>
                           추가
                         </button>
@@ -234,10 +239,10 @@ function App() {
                 {e.right.node_type === "C" && 
                   (
                     <div
-                    className="div_Background" //key={e.right.id} id={e.right.id}
+                    className="div_Background" name={e.right.id} onDragOver={onDragOver_div_event} onDrop={onDrop_div_event} //onDragEnd={onDragEnd_div_event}
                     style={{ inset: `${e.right.inset_top}% ${e.right.inset_right}% ${e.right.inset_bottom}% ${e.right.inset_left}%` }}
                     >
-                    <div className="div_Title" name={e.id} draggable="true" onMouseDown={onMouseDown_div_event}>
+                    <div className="div_Title" draggable="true" onDragStart={onDragStart_div_event}>
                       <button onClick={Add_Div} id={e.right.id}>
                         추가
                       </button>
@@ -252,10 +257,11 @@ function App() {
           } else if (e.div_type === "N" && e.node_type !== "D" && e.p_id == null) {
             return (
               <div
-                className="div_Background" //key={e.id} id={e.id}
+                className="div_Background" name={e.id} onDragOver={onDragOver_div_event} onDrop={onDrop_div_event} //onDragEnd={onDragEnd_div_event} // draggable="true" onDragEnd={onDragEnd_div_event} onDrag={onDrag_div_event} // onMouseDown_div_event} //key={e.left.id} id={e.left.id}
                 style={{ inset: `${e.inset_top}% ${e.inset_right}% ${e.inset_bottom}% ${e.inset_left}%` }}
               >
-                <div className="div_Title" name={e.id} draggable="true" onMouseDown={onMouseDown_div_event}>
+                <div className="div_Title" draggable="true" onDragStart={onDragStart_div_event} //onDragOver={onDragOver_div_event} onDragEnd={onDragEnd_div_event}
+                >  
                   <button onClick={Add_Div} id={e.id}>
                     추가
                   </button>
@@ -272,3 +278,53 @@ function App() {
 }
 
 export default App;
+
+
+
+
+    // const tmp_div = e.target.parentElement;
+    // tmp_div.addEventListener('dragover', onMouseDragover_div_event);
+    // tmp_div.addEventListener('drop',     onMouseDrop_div_event);
+    // // tmp_div.addEventListener('drag',    onMouseDrag_div_event);
+    // // tmp_div.addEventListener('dragend', onMouseDragend_div_event);
+      // 현재 드래그한 좌표의 엘리먼트를 받아와서 
+
+      // // 부모노드와 자식노드에 대한 내용을 변수에 받아온다.
+      // let tmp_p = arr[parseInt(e.target.getAttribute('name'))];
+      // let tmp_l = tmp_p.left;
+      // let tmp_r = tmp_p.right;
+
+      // // 현재 마우스의 좌표를 기준으로, 몇퍼센트인지 역계산을 해줘야한다.
+      // // 대상의 부모의 Width와 Left 좌표값을 가지고 계산하면 된다.
+      // // ((마우스의 현재 좌표 - 기준좌표)  / 부모의 길이) * 100
+      // // 부모의 div type이 C | R 에 따라 다르다.
+      // if (tmp_p.div_type === "C") {
+      //   // tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / (window.innerWidth))  * 100;
+      //   tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / (PercentToLength(window.innerWidth, tmp_p.inset_left, tmp_p.inset_right)))  * 100;
+      // } else {
+      //   // tmp_l.ratio = ((event.clientY - (tmp_p.inset_top  * (window.innerHeight / 100))) / (window.innerHeight)) * 100;
+      //   tmp_l.ratio = ((event.clientY - (tmp_p.inset_top * (window.innerHeight  / 100))) / (PercentToLength(window.innerHeight, tmp_p.inset_top, tmp_p.inset_bottom))) * 100;
+      // }
+      // tmp_r.ratio = 100 - tmp_l.ratio;
+
+      // // inset 재조정
+      // bst.resize_div(arr);
+
+      // // 배열 갱신
+      // setArr([...arr]);
+
+      // // console.log("=============client 좌표");
+      // // console.log(event.clientX + " / " + event.clientY);
+
+
+      
+  // function onMouseDrop_div_event() {
+  //   console.log("==============Div Drop=============");
+
+  //   tmp_div.removeEventListener('dragover', onMouseDragover_div_event);
+  //   tmp_div.removeEventListener('drop',     onMouseDrop_div_event);
+  //   // tmp_div.removeEventListener('drag',    onMouseDrag_div_event);
+  //   // tmp_div.removeEventListener('dragend', onMouseDragend_div_event);
+
+  //   console.log(arr);
+  // }

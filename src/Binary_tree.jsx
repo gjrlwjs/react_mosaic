@@ -123,6 +123,40 @@ export class Binary_Tree {
     // return left_node;//old_node.left;
   }
 
+  change(parent_node, new_id, change_node, display_type, bLeft) {
+    console.log("===========change 1회============");
+
+    // 부모 node 정보를 불러와서 left, right 로 분류하여 추가해준다.(기존 Left, 신규 Right)
+    // const old_node = this.find_node(parent_id);
+    const old_node   = parent_node;
+    const left_node  = new Node(new_id,     "N", "C", old_node.node_text,    0, 0, 0, 0, 50, old_node.id);
+    const right_node = new Node(new_id + 1, "N", "C", change_node.node_text, 0, 0, 0, 0, 50, old_node.id);
+
+    if (bLeft === true) {
+      left_node.node_text  = change_node.node_text;
+      right_node.node_text = old_node.node_text;
+    } else {
+      left_node.node_text  = old_node.node_text;
+      right_node.node_text = change_node.node_text;
+    }
+
+    // target 노드를 찾아왔으니, Left Right 값을 입력한다.
+    if (old_node) {
+      // 기존 old도 값을 바꿔주고
+      old_node.div_type  = display_type;
+      old_node.node_type = "P";
+      old_node.node_text = "";
+
+      // Left | right 입력
+      old_node.left  = left_node;
+      old_node.right = right_node;
+
+      return [left_node, right_node];//[left_node, left_node, right_node];
+    }
+    return null;//left_node;//old_node.left;
+  }
+
+
   // 삭제시, 
   // 자신과 형제노드 - 부모노드 간의 연결을 해제하고
   // 조부모노드와 자신의 정보를 연결해준다.
@@ -206,7 +240,7 @@ export class Binary_Tree {
     parent_node.left  = null;
     parent_node.right = null;    
     // this.root = removeNode(this.root, del_id);
-    return;
+    return false; 
   }
 
   copy_inset(tmp_source, tmp_dst) {

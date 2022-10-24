@@ -298,6 +298,9 @@ function App() {
       if (tmp_node.node_type === "C") {
         tmp_el = document.getElementsByName(tmp_node.id);
         tmp_el[0].style.inset = `${tmp_node.inset_top}% ${tmp_node.inset_right}% ${tmp_node.inset_bottom}% ${tmp_node.inset_left}%`;
+      } else if (tmp_node.node_type === "P") {
+        tmp_el = document.getElementsByName(tmp_node.id);
+        tmp_el[0].style.inset = `${tmp_node.right.inset_top}% ${tmp_node.right.inset_right}% ${tmp_node.right.inset_bottom}% ${tmp_node.right.inset_left}%`;
       }
     });
 

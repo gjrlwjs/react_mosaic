@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/react_mosaic/static/css/main.1791cc02.css",
-    "main.js": "/react_mosaic/static/js/main.422a96e4.js",
+    "main.js": "/react_mosaic/static/js/main.e4c391e9.js",
     "index.html": "/react_mosaic/index.html",
     "main.1791cc02.css.map": "/react_mosaic/static/css/main.1791cc02.css.map",
-    "main.422a96e4.js.map": "/react_mosaic/static/js/main.422a96e4.js.map"
+    "main.e4c391e9.js.map": "/react_mosaic/static/js/main.e4c391e9.js.map"
   },
   "entrypoints": [
     "static/css/main.1791cc02.css",
-    "static/js/main.422a96e4.js"
+    "static/js/main.e4c391e9.js"
   ]
 }

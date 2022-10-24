@@ -34,6 +34,18 @@ button {
   opacity: 0.5;
 }
 
+.div_Shadow {
+  /* flex: 1; */
+  border: 10px;
+  border-color: blue;
+  background-color: skyblue;
+  inset: "0% 0% 50% 0%";
+  position: absolute;
+  z-index: 100;
+  display: none;
+  opacity: 50%;
+}
+
 .div_Background {
   /* flex: 1; */
   border: 3px;
@@ -41,7 +53,7 @@ button {
   background-color: white;
   inset: "0% 0% 0% 0%";
   position: absolute;
-  z-index: 0;  
+  z-index: 1;  
 }
 
 .div_Title {
@@ -72,7 +84,7 @@ button {
   cursor: ew-resize;
 
   position: absolute;
-  z-index: 1;
+  z-index: 10;
   /* touch-action: cross-slide-x;   */
   background-color: pink;
 }
@@ -88,7 +100,7 @@ button {
   cursor: ns-resize;
 
   position: absolute;
-  z-index: 1;
+  z-index: 10;
   /* touch-action: cross-slide-y;   */
   background-color: pink;
 }

@@ -8,10 +8,12 @@ import { PercentToLength, PercentToPx, Position_Check, Position_Fix } from "./uf
 const bst = new Binary_Tree();
 let idx = 0;
 let node_text_idx = 0;
+let shadow_div = document.getElementById("shadow");
 
 let drag_node = null;                 // Null or Node
 let drag_state = "N";                 // N / T / R / B / L
 let drag_bleft = false;               // T = Left / F = Right
+let drop_id    = -1;
 
 function App() {
   const [arr, setArr] = useState([]);
@@ -146,7 +148,7 @@ function App() {
 // ==================================================================================================================================================
 // =================================================================== Div Event ====================================================================
 // ==================================================================================================================================================
-const onDragStart_div_event = (e) => {
+  const onDragStart_div_event = (e) => {
     console.log("==============Div Drag Start=============");  
     //console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
     //console.log(e.target);
@@ -157,9 +159,104 @@ const onDragStart_div_event = (e) => {
     drag_node  = arr[parseInt(e.target.parentElement.getAttribute("name"))];
     drag_state = "N";
     drag_bleft = false;
+    drop_id    = parseInt(e.target.parentElement.getAttribute("name"));
+
+    // 드래그가 시작된 노드를 기준으로 
+    let tmp_p_node = null;
+    let tmp_c_node = null;
+    let tmp_c2_node = null;
+    let tmp_el     = null;
+
+    if (drag_node.p_id !== null) {
+      tmp_p_node = arr[drag_node.p_id];
+
+      // Drag Node가 L인지 R인지 체크
+      if (tmp_p_node.left.id === drag_node.id) {
+        tmp_c_node  = tmp_p_node.right;
+        tmp_c2_node = tmp_p_node.left;
+      } else {
+        tmp_c_node  = tmp_p_node.left;
+        tmp_c2_node = tmp_p_node.right;
+      }
+
+      // 1. 형제 노드의 크기를 부모 노드의 크기만큼 늘려서 Arr[] 에 넣어주고
+      bst.copy_inset(tmp_p_node, tmp_c_node);
+      tmp_c_node.ratio  = 100;
+      tmp_c2_node.ratio = 0;
+
+      // 2. 형제 노드의 Element의 inset 값도 강제로 바꿔주고
+      // tmp_el = document.getElementsByName(tmp_c_node.id);
+      tmp_el = document.getElementsByName(tmp_c_node.id);
+      tmp_el[0].style.inset = `${tmp_p_node.inset_top}% ${tmp_p_node.inset_right}% ${tmp_p_node.inset_bottom}% ${tmp_p_node.inset_left}%`;
+      
+      // 3. 바도 감추고
+      tmp_el = document.getElementsByName(tmp_p_node.id);
+      tmp_el[0].style.display = 'none';
+
+      // 4. 자신도 감춘다.
+      tmp_el = document.getElementsByName(drag_node.id);
+      tmp_el[0].style.zIndex = 2;
+      // tmp_el[0].style.pointerEvents = false;
+      tmp_el[0].style.opacity = 0;
+
+
+
+      // // drag_node이면 제외하고 재계산 해줘야한다.
+      // arr.forEach(tmp_node => {
+      //   if (tmp_node.p_id !== tmp_p_node.id) {
+      //     // 인자가 부모 노드이면(= 노드타입이 P인 경우, 하위 노드의 inset 값을 재조정함. 하위 노드가 P인 경우도 마찬가지)
+      //     if (tmp_node.node_type === "P") {
+      //       let tmp_left  = tmp_node.left;
+      //       let tmp_right = tmp_node.right;
+    
+      //       // inset OverWrite
+      //       bst.copy_inset(tmp_node, tmp_left);
+      //       bst.copy_inset(tmp_node, tmp_right);
+    
+      //       // 부모의 분할 타입에 따라, 부모 대비 자식의 비율을 inset 값에 재조정해준다.
+      //       if (tmp_node.div_type === "C") {
+      //         // C = Col = 가로 = left / right
+      //         let tmp_width = (100 - (tmp_node.inset_left + tmp_node.inset_right));
+    
+      //         tmp_left.inset_right = tmp_left.inset_right + (tmp_width * ((100 - tmp_left.ratio)  / 100));
+      //         tmp_right.inset_left = tmp_right.inset_left + (tmp_width * ((100 - tmp_right.ratio) / 100)); //tmp_right.ratio / 100));
+      //       } else {
+      //         // R = Row = 세로 = top / bottom
+      //         let tmp_height = (100 - (tmp_node.inset_top + tmp_node.inset_bottom));
+    
+      //         tmp_left.inset_bottom = tmp_left.inset_bottom + (tmp_height * ((100 - tmp_left.ratio)  / 100));
+      //         tmp_right.inset_top   = tmp_right.inset_top   + (tmp_height * ((100 - tmp_right.ratio) / 100)); //tmp_right.ratio / 100));
+      //       }
+      //     }
+      //   }
+      // });
+
+      // arr.forEach(tmp_node => {
+      //   // 인자가 부모 노드이면(= 노드타입이 C인 경우, 화면에 출력
+      //   if (tmp_node.node_type === "C") {
+      //     tmp_el = document.getElementsByName(tmp_node.id);
+      //     tmp_el[0].style.inset = `${tmp_node.inset_top}% ${tmp_node.inset_right}% ${tmp_node.inset_bottom}% ${tmp_node.inset_left}%`;
+      //   }
+      // });       
+    }
   }
 
+  const onDragenter_div_event = (e) => {
+    console.log("==============Div enter=============");  
+    // e.preventDefault();
+
+    // drop_id가 -1이 아니고 나 자신이 아닐때 drag_node의 zindex를 뒤로 보낸다!
+    if ((drop_id !== -1) || (drop_id !== drag_node.id)) {
+      let tmp_el = document.getElementsByName(drag_node.id);
+      tmp_el[0].style.zIndex = 0;
+    }
+
+    // 마우스 Over 이벤트 발생 => 마우스의 움직임에 따라, onMouseMove 이벤트를 유지한다(onMouseUp이 될 때까지 or onMouseLeave)
+    drop_id = parseInt(e.target.parentElement.getAttribute("name"));
+  }  
+
   const onDragOver_div_event = (e) => {  
+    console.log("==============Drag Over=============");
     if (drag_node === null) {
       return false;
     }
@@ -204,59 +301,82 @@ const onDragStart_div_event = (e) => {
     else                                                 {drag_bleft = false}
 
     // 현재 마우스의 X, Y 좌표에 따라, 어떤 구역에 속해있는지 확인해서 쉐도우 DIV를 뿌려준다.
+    switch (drag_state) {
+      case "T":
+        shadow_div.style.inset = `${tmp_node.inset_top}% ${tmp_node.inset_right}% ${tmp_node.inset_bottom + ((100 - (tmp_node.inset_top + tmp_node.inset_bottom)) / 2)}% ${tmp_node.inset_left}%`;
+        break;
+      case "R":
+        shadow_div.style.inset = `${tmp_node.inset_top}% ${tmp_node.inset_right}% ${tmp_node.inset_bottom}% ${tmp_node.inset_left + ((100 - (tmp_node.inset_left + tmp_node.inset_right)) / 2)}%`;
+        break;
+      case "B":
+        shadow_div.style.inset = `${tmp_node.inset_top + ((100 - (tmp_node.inset_top + tmp_node.inset_bottom)) / 2)}% ${tmp_node.inset_right}% ${tmp_node.inset_bottom}% ${tmp_node.inset_left}%`;
+        break;
+      default: // L
+        shadow_div.style.inset = `${tmp_node.inset_top}% ${tmp_node.inset_right + ((100 - (tmp_node.inset_left + tmp_node.inset_right)) / 2)}% ${tmp_node.inset_bottom}% ${tmp_node.inset_left}%`;
+      break;
+    }          
+    shadow_div.style.display = 'block';
+    shadow_div.style.zIndex  = 100;
+
     // console.log(tmp_position);
     // console.log(drag_state);
     // console.log(drag_bleft);
   }  
 
-  const onDrop_div_event = (e) => {  
+  const onDragEnd_div_event = (e) => {  
     if (drag_node === null) {
       return false;
     }
+    // e.preventDefault();
 
-    e.preventDefault();
+    console.log("DragEnd");
+    shadow_div.style.display = 'none';
+    shadow_div.style.zIndex  = -1;
 
     console.log("==============Drop=============");
-    console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
-    console.log(e.target);
+    console.log("Node id = " + drop_id);
+    // console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
+    // console.log(e.target.parentElement);
+    // console.log(e.target.parentElement.getAttribute("name"));
 
-    if (e.target.tagName !== "BUTTON") {
-      if (drag_node.id !== parseInt(e.target.parentElement.getAttribute("name"))) {
-        // 위치에 따라, Col | Row   /   Left | Right 를 지정하여 Insert / remove 해줘야한다.
-        const change_result = bst.change(arr[parseInt(e.target.parentElement.getAttribute("name"))], arr.length, drag_node, drag_state, drag_bleft);
-  
-        if (change_result) {
-          idx = idx + 2;
-          // node_text_idx = node_text_idx + 1;
-  
-          arr.push(change_result[0]);
-          arr.push(change_result[1]);
-          // setArr([...arr, change_result[0], change_result[1]]);
-        };
-  
-        // 기존 배열에서 inset 값을 변경 후 가져와야한다.
-        if (arr[arr[arr[drag_node.id].p_id].p_id]) {
-          bst.remove(arr[arr[arr[drag_node.id].p_id].p_id], arr[arr[drag_node.id].p_id], arr[drag_node.id]);
-        } else {
-          bst.remove(null, arr[arr[drag_node.id].p_id], arr[drag_node.id]);
-        } 
-        // drag_node = null;
-        // inset 재조정
-        bst.resize_div(arr);
-  
-        console.log("==============Drop after Log=============");
-        console.log(drag_node);
-        console.log(drag_state);
-        console.log(drag_bleft);
-        console.log(arr);
-  
-        // 배열 갱신
-        setArr([...arr]);
-      }
+    //if (e.target.tagName !== "BUTTON") {
+    if (drag_node.id !== drop_id) {
+      // 위치에 따라, Col | Row   /   Left | Right 를 지정하여 Insert / remove 해줘야한다.
+      const change_result = bst.change(arr[drop_id], arr.length, drag_node, drag_state, drag_bleft);
+
+      if (change_result) {
+        idx = idx + 2;
+        // node_text_idx = node_text_idx + 1;
+
+        arr.push(change_result[0]);
+        arr.push(change_result[1]);
+        // setArr([...arr, change_result[0], change_result[1]]);
+      };
+
+      // 기존 배열에서 inset 값을 변경 후 가져와야한다.
+      if (arr[arr[arr[drag_node.id].p_id].p_id]) {
+        bst.remove(arr[arr[arr[drag_node.id].p_id].p_id], arr[arr[drag_node.id].p_id], arr[drag_node.id]);
+      } else {
+        bst.remove(null, arr[arr[drag_node.id].p_id], arr[drag_node.id]);
+      } 
+      // drag_node = null;
+      // inset 재조정
+      bst.resize_div(arr);
+
+      console.log("==============Drop after Log=============");
+      console.log(drag_node);
+      console.log(drag_state);
+      console.log(drag_bleft);
+      console.log(arr);
+
+      // 배열 갱신
+      setArr([...arr]);
     }
+    //}
     drag_node  = null;
     drag_state = "N";
     drag_bleft = false;
+    drop_id    = -1;
   }
 
 // ==================================================================================================================================================
@@ -264,6 +384,7 @@ const onDragStart_div_event = (e) => {
 // ==================================================================================================================================================
   return (
     <>
+      {/* <div id="shadow" className="div_Shadow"></div> */}
       {arr.map(
         (e) => {
           if (e.node_type === "P") {
@@ -287,7 +408,7 @@ const onDragStart_div_event = (e) => {
                 {e.left.node_type === "C" && 
                   (
                     <div
-                      className="div_Background" name={e.left.id} onDragOver={onDragOver_div_event} onDrop={onDrop_div_event}
+                      className="div_Background" name={e.left.id} onDragOver={onDragOver_div_event} onDragEnd={onDragEnd_div_event} onDragEnter={onDragenter_div_event}//onDrop={onDrop_div_event} 
                       style={{ inset: `${e.left.inset_top}% ${e.left.inset_right}% ${e.left.inset_bottom}% ${e.left.inset_left}%` }}
                     >
                       <div className="div_Title" draggable="true" onDragStart={onDragStart_div_event}>
@@ -303,7 +424,7 @@ const onDragStart_div_event = (e) => {
                 {e.right.node_type === "C" && 
                   (
                     <div
-                    className="div_Background" name={e.right.id} onDragOver={onDragOver_div_event} onDrop={onDrop_div_event} //onDragEnd={onDragEnd_div_event}
+                    className="div_Background" name={e.right.id} onDragOver={onDragOver_div_event} onDragEnd={onDragEnd_div_event} onDragEnter={onDragenter_div_event}// onDrop={onDrop_div_event} 
                     style={{ inset: `${e.right.inset_top}% ${e.right.inset_right}% ${e.right.inset_bottom}% ${e.right.inset_left}%` }}
                     >
                     <div className="div_Title" draggable="true" onDragStart={onDragStart_div_event}>
@@ -321,7 +442,7 @@ const onDragStart_div_event = (e) => {
           } else if (e.div_type === "N" && e.node_type !== "D" && e.p_id == null) {
             return (
               <div
-                className="div_Background" name={e.id} onDragOver={onDragOver_div_event} onDrop={onDrop_div_event} //onDragEnd={onDragEnd_div_event} // draggable="true" onDragEnd={onDragEnd_div_event} onDrag={onDrag_div_event} // onMouseDown_div_event} //key={e.left.id} id={e.left.id}
+                className="div_Background" name={e.id} onDragOver={onDragOver_div_event} onDragEnd={onDragEnd_div_event} onDragEnter={onDragenter_div_event}// onDrop={onDrop_div_event} 
                 style={{ inset: `${e.inset_top}% ${e.inset_right}% ${e.inset_bottom}% ${e.inset_left}%` }}
               >
                 <div className="div_Title" draggable="true" onDragStart={onDragStart_div_event} //onDragOver={onDragOver_div_event} onDragEnd={onDragEnd_div_event}
@@ -391,4 +512,58 @@ export default App;
   //   // tmp_div.removeEventListener('dragend', onMouseDragend_div_event);
 
   //   console.log(arr);
+  // }
+
+
+
+  // const onDrop_div_event = (e) => {  
+  //   if (drag_node === null) {
+  //     return false;
+  //   }
+  //   // shadow_div.style.display = 'none';
+  //   // shadow_div.style.zIndex  = -1;
+
+  //   e.preventDefault();
+
+  //   console.log("==============Drop=============");
+  //   console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
+  //   console.log(e.target);
+
+  //   if (e.target.tagName !== "BUTTON") {
+  //     if (drag_node.id !== parseInt(e.target.parentElement.getAttribute("name"))) {
+  //       // 위치에 따라, Col | Row   /   Left | Right 를 지정하여 Insert / remove 해줘야한다.
+  //       const change_result = bst.change(arr[parseInt(e.target.parentElement.getAttribute("name"))], arr.length, drag_node, drag_state, drag_bleft);
+  
+  //       if (change_result) {
+  //         idx = idx + 2;
+  //         // node_text_idx = node_text_idx + 1;
+  
+  //         arr.push(change_result[0]);
+  //         arr.push(change_result[1]);
+  //         // setArr([...arr, change_result[0], change_result[1]]);
+  //       };
+  
+  //       // 기존 배열에서 inset 값을 변경 후 가져와야한다.
+  //       if (arr[arr[arr[drag_node.id].p_id].p_id]) {
+  //         bst.remove(arr[arr[arr[drag_node.id].p_id].p_id], arr[arr[drag_node.id].p_id], arr[drag_node.id]);
+  //       } else {
+  //         bst.remove(null, arr[arr[drag_node.id].p_id], arr[drag_node.id]);
+  //       } 
+  //       // drag_node = null;
+  //       // inset 재조정
+  //       bst.resize_div(arr);
+  
+  //       console.log("==============Drop after Log=============");
+  //       console.log(drag_node);
+  //       console.log(drag_state);
+  //       console.log(drag_bleft);
+  //       console.log(arr);
+  
+  //       // 배열 갱신
+  //       setArr([...arr]);
+  //     }
+  //   }
+  //   drag_node  = null;
+  //   drag_state = "N";
+  //   drag_bleft = false;
   // }

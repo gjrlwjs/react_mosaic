@@ -251,12 +251,6 @@ function App() {
       tmp_el[0].style.zIndex = 0;
     }
 
-
-
-
-
-
-
     // drag_node이면 제외하고 재계산 해줘야한다.
     arr.forEach(tmp_node => {
       // if (tmp_node.p_id !== tmp_p_node.id) {
@@ -303,13 +297,6 @@ function App() {
         tmp_el[0].style.inset = `${tmp_node.right.inset_top}% ${tmp_node.right.inset_right}% ${tmp_node.right.inset_bottom}% ${tmp_node.right.inset_left}%`;
       }
     });
-
-
-
-
-
-
-
 
     // 마우스 Over 이벤트 발생 => 마우스의 움직임에 따라, onMouseMove 이벤트를 유지한다(onMouseUp이 될 때까지 or onMouseLeave)
     drop_id = parseInt(e.target.parentElement.getAttribute("name"));

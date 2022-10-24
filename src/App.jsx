@@ -237,7 +237,7 @@ function App() {
       //     tmp_el = document.getElementsByName(tmp_node.id);
       //     tmp_el[0].style.inset = `${tmp_node.inset_top}% ${tmp_node.inset_right}% ${tmp_node.inset_bottom}% ${tmp_node.inset_left}%`;
       //   }
-      // });       
+      // });
     }
   }
 
@@ -250,6 +250,63 @@ function App() {
       let tmp_el = document.getElementsByName(drag_node.id);
       tmp_el[0].style.zIndex = 0;
     }
+
+
+
+
+
+
+
+    // drag_node이면 제외하고 재계산 해줘야한다.
+    arr.forEach(tmp_node => {
+      // if (tmp_node.p_id !== tmp_p_node.id) {
+      // if (tmp_node.p_id !== arr[drag_node.p_id].id) 
+      {
+        // 인자가 부모 노드이면(= 노드타입이 P인 경우, 하위 노드의 inset 값을 재조정함. 하위 노드가 P인 경우도 마찬가지)
+        if (tmp_node.node_type === "P") {
+          let tmp_left  = tmp_node.left;
+          let tmp_right = tmp_node.right;
+  
+          // inset OverWrite
+          bst.copy_inset(tmp_node, tmp_left);
+          bst.copy_inset(tmp_node, tmp_right);
+  
+          // 부모의 분할 타입에 따라, 부모 대비 자식의 비율을 inset 값에 재조정해준다.
+          if (tmp_node.div_type === "C") {
+            // C = Col = 가로 = left / right
+            let tmp_width = (100 - (tmp_node.inset_left + tmp_node.inset_right));
+  
+            tmp_left.inset_right = tmp_left.inset_right + (tmp_width * ((100 - tmp_left.ratio)  / 100));
+            tmp_right.inset_left = tmp_right.inset_left + (tmp_width * ((100 - tmp_right.ratio) / 100)); //tmp_right.ratio / 100));
+          } else {
+            // R = Row = 세로 = top / bottom
+            let tmp_height = (100 - (tmp_node.inset_top + tmp_node.inset_bottom));
+  
+            tmp_left.inset_bottom = tmp_left.inset_bottom + (tmp_height * ((100 - tmp_left.ratio)  / 100));
+            tmp_right.inset_top   = tmp_right.inset_top   + (tmp_height * ((100 - tmp_right.ratio) / 100)); //tmp_right.ratio / 100));
+          }
+        }
+      }
+    });
+
+    console.log('inset 재계산 이후');
+    console.log(arr);
+
+    let tmp_el = null;
+    arr.forEach(tmp_node => {
+      // 인자가 부모 노드이면(= 노드타입이 C인 경우, 화면에 출력
+      if (tmp_node.node_type === "C") {
+        tmp_el = document.getElementsByName(tmp_node.id);
+        tmp_el[0].style.inset = `${tmp_node.inset_top}% ${tmp_node.inset_right}% ${tmp_node.inset_bottom}% ${tmp_node.inset_left}%`;
+      }
+    });
+
+
+
+
+
+
+
 
     // 마우스 Over 이벤트 발생 => 마우스의 움직임에 따라, onMouseMove 이벤트를 유지한다(onMouseUp이 될 때까지 or onMouseLeave)
     drop_id = parseInt(e.target.parentElement.getAttribute("name"));

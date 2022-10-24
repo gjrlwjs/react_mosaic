@@ -162,10 +162,10 @@ function App() {
     drop_id    = parseInt(e.target.parentElement.getAttribute("name"));
 
     // 드래그가 시작된 노드를 기준으로 
-    let tmp_p_node = null;
-    let tmp_c_node = null;
+    let tmp_p_node  = null;
+    let tmp_c_node  = null;
     let tmp_c2_node = null;
-    let tmp_el     = null;
+    let tmp_el      = null;
 
     if (drag_node.p_id !== null) {
       tmp_p_node = arr[drag_node.p_id];
@@ -322,6 +322,7 @@ function App() {
     }
 
     e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
 
     let tmp_node = arr[parseInt(e.target.parentElement.getAttribute("name"))];
 
@@ -371,7 +372,8 @@ function App() {
       case "B":
         shadow_div.style.inset = `${tmp_node.inset_top + ((100 - (tmp_node.inset_top + tmp_node.inset_bottom)) / 2)}% ${tmp_node.inset_right}% ${tmp_node.inset_bottom}% ${tmp_node.inset_left}%`;
         break;
-      default: // L
+      // default: // L
+      case "L":
         shadow_div.style.inset = `${tmp_node.inset_top}% ${tmp_node.inset_right + ((100 - (tmp_node.inset_left + tmp_node.inset_right)) / 2)}% ${tmp_node.inset_bottom}% ${tmp_node.inset_left}%`;
       break;
     }          

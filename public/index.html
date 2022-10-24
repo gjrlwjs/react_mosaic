@@ -21,8 +21,15 @@
       
       <div id="root" style="height: calc(100% - 50px)"></div>
     </div> document.getElementById('shadow').style.display = 'none'-->
-    <div id="shadow" class="div_Shadow"></div>
+    <div id="shadow" class="div_Shadow" draggable="true" ondragover="drag_over(event)"></div>
     <div id="root" style="height: 100%"></div>
     <script src="../src/index.js"></script>
+    <script language="javascript">
+      function drag_over(e) {
+        e.dataTransfer.dropEffect = "move";
+        e.preventDefault();
+        console.log('123123123');
+      }
+    </script>
   </body>
 </html>

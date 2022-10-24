@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/react_mosaic/static/css/main.1791cc02.css",
-    "main.js": "/react_mosaic/static/js/main.e4c391e9.js",
+    "main.css": "/react_mosaic/static/css/main.9fc72c81.css",
+    "main.js": "/react_mosaic/static/js/main.6e54cc36.js",
     "index.html": "/react_mosaic/index.html",
-    "main.1791cc02.css.map": "/react_mosaic/static/css/main.1791cc02.css.map",
-    "main.e4c391e9.js.map": "/react_mosaic/static/js/main.e4c391e9.js.map"
+    "main.9fc72c81.css.map": "/react_mosaic/static/css/main.9fc72c81.css.map",
+    "main.6e54cc36.js.map": "/react_mosaic/static/js/main.6e54cc36.js.map"
   },
   "entrypoints": [
-    "static/css/main.1791cc02.css",
-    "static/js/main.e4c391e9.js"
+    "static/css/main.9fc72c81.css",
+    "static/js/main.6e54cc36.js"
   ]
 }

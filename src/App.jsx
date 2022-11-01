@@ -8,7 +8,6 @@ import { PercentToLength, PercentToPx, Position_Check, Position_Fix } from "./uf
 const bst = new Binary_Tree();
 let idx = 0;
 let node_text_idx = 0;
-let shadow_div = document.getElementById("shadow");
 
 let drag_node = null;                 // Null or Node
 let drag_state = "N";                 // N / T / R / B / L
@@ -28,6 +27,10 @@ function App() {
     console.log(arr);
   };
 
+  // function drag_over(e) {
+  //   e.dataTransfer.dropEffect = "move";
+  //   e.preventDefault();
+  // }  
 // ==================================================================================================================================================
 // =================================================================== Button Event =================================================================
 // ==================================================================================================================================================
@@ -108,10 +111,15 @@ function App() {
         // 부모의 div type이 C | R 에 따라 다르다.
         if (tmp_p.div_type === "C") {
           // tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / (window.innerWidth))  * 100;
-          tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / (PercentToLength(window.innerWidth, tmp_p.inset_left, tmp_p.inset_right)))  * 100;
+          tmp_l.ratio = (( event.clientX       - (tmp_p.inset_left *  (window.innerWidth         / 100))) / (PercentToLength( window.innerWidth,        tmp_p.inset_left, tmp_p.inset_right ))) * 100;
         } else {
           // tmp_l.ratio = ((event.clientY - (tmp_p.inset_top  * (window.innerHeight / 100))) / (window.innerHeight)) * 100;
-          tmp_l.ratio = ((event.clientY - (tmp_p.inset_top * (window.innerHeight  / 100))) / (PercentToLength(window.innerHeight, tmp_p.inset_top, tmp_p.inset_bottom))) * 100;
+          tmp_l.ratio = (((event.clientY - 40) - (tmp_p.inset_top  * ((window.innerHeight - 40)  / 100))) / (PercentToLength((window.innerHeight - 40), tmp_p.inset_top,  tmp_p.inset_bottom))) * 100;
+        } 
+        if (tmp_l.ratio < 15) {
+          tmp_l.ratio = 15;
+        } else if (tmp_l.ratio > 85) {
+          tmp_l.ratio = 85;
         }
         tmp_r.ratio = 100 - tmp_l.ratio;
 
@@ -311,6 +319,7 @@ function App() {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
 
+    let shadow_div = document.getElementById("shadow");
     let tmp_node = arr[parseInt(e.target.parentElement.getAttribute("name"))];
 
     let point_x      = PercentToPx(window.innerWidth,  tmp_node.inset_left);
@@ -377,6 +386,8 @@ function App() {
       return false;
     }
     // e.preventDefault();
+
+    let shadow_div = document.getElementById("shadow");
 
     console.log("DragEnd");
     shadow_div.style.display = 'none';

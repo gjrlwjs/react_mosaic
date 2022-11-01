@@ -28,5 +28,15 @@ import App from './App';
 //   modal.style.display = "none";
 // };
 
+const onDrag_Over_shadow_event = (e) => {
+  e.dataTransfer.dropEffect = "move";
+  e.preventDefault();
+}
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+root.render(
+<>
+  <div id="shadow" className="div_Shadow" draggable="true" onDragOver={onDrag_Over_shadow_event}></div>
+  <App />
+</>  
+);

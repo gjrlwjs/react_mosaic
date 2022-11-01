@@ -14,23 +14,54 @@
   </head>
   <body style="height: 100%">
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <!-- <div id="Main" style="background-color: cadetblue; height: 100%; padding: 0; margin: 0; text-align: right;">
-      <div style="background-color: hotpink;">
-        <button id="Main_Add" style="width: 100px; height: 50px;">추가</button>
-      </div>
-      
-      <div id="root" style="height: calc(100% - 50px)"></div>
-    </div> document.getElementById('shadow').style.display = 'none'-->
-
     
-    <div id="shadow" class="div_Shadow" draggable="true" ondragover="drag_over(event)"></div>
-    <div id="root" style="height: 100%"></div>
+    <div id="menu" class="div_Menubar">
+      <button onclick="change_arr(event)" name="P1">P1</button>
+      <button onclick="change_arr(event)" name="P2">P2</button>
+      <button onclick="change_arr(event)" name="P3">P3</button>
+      <button onclick="change_arr(event)" name="P4">P4</button>
+      <button onclick="change_arr(event)" name="P5">P5</button>
+    </div>
+    <div id="root">
+      <div id="shadow" class="div_Shadow" draggable="true" ondragover="drag_over(event)"></div>
+    </div>
     <script src="../src/index.js"></script>
     <script language="javascript">
-      function drag_over(e) {
-        e.dataTransfer.dropEffect = "move";
-        e.preventDefault();
-      }
+      // <div id="shadow" class="div_Shadow" draggable="true" ondragover="drag_over(event)"></div>
+      // function drag_over(e) {
+      //   e.dataTransfer.dropEffect = "move";
+      //   e.preventDefault();
+      // }
+      function change_arr (e) {
+        // TODO inset 계산
+        console.log('===========DB Arr 버튼 클릭===========');
+        // console.log(e.target.name);
+        // // 0을 1|2로 Div 추가하기
+        // const insert_result = bst.insert(arr[e.target.id], arr.length, node_text_idx);
+        // e.preventDefault();
+
+        let tmp_index = 0;
+
+        switch (e.target.name) {
+          case "P1":
+            tmp_index = 0;
+            break;
+          case "P2":
+            tmp_index = 1;
+            break;
+          case "P3":
+            tmp_index = 2;
+            break;
+          case "P4":
+            tmp_index = 3;
+            break;
+          case "P5":
+            tmp_index = 4;
+            break;
+        }
+      
+        console.log(tmp_index);
+      };
     </script>
   </body>
 </html>

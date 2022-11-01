@@ -69,8 +69,8 @@ export class Binary_Tree {
 
     // 부모 node 정보를 불러와서 left, right 로 분류하여 추가해준다.(기존 Left, 신규 Right)
     // const old_node = this.find_node(parent_id);
-    const old_node = parent_node;
-    const left_node = new Node(new_id, "N", "C", old_node.node_text,               old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, 50, old_node.id);
+    const old_node   = parent_node;
+    const left_node  = new Node(new_id,     "N", "C",          old_node.node_text, old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, 50, old_node.id);
     const right_node = new Node(new_id + 1, "N", "C", "windows " + (text_idx + 1), old_node.inset_top, old_node.inset_right, old_node.inset_bottom, old_node.inset_left, 50, old_node.id);
 
     // console.log("부모 ID = " + old_node.id);
@@ -79,10 +79,10 @@ export class Binary_Tree {
     // target 노드를 찾아왔으니, Left Right 값을 입력한다.
     if (old_node) {
       // 화면 너비
-      let calc_width = (100 - (old_node.inset_left + old_node.inset_right)) / 2;
+      let calc_width  = (100 - (old_node.inset_left + old_node.inset_right))  / 2;
 
       // 화면 높이
-      let calc_height = (100 - (old_node.inset_top + old_node.inset_bottom)) / 2;
+      let calc_height = (100 - (old_node.inset_top  + old_node.inset_bottom)) / 2;
 
       // (abs(R - L) > abs(B - T) ?)
       if (calc_width >= calc_height) {

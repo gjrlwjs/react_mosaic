@@ -21,6 +21,8 @@
       <button onclick="change_arr(event)" name="P3">P3</button>
       <button onclick="change_arr(event)" name="P4">P4</button>
       <button onclick="change_arr(event)" name="P5">P5</button>
+
+      <button onclick="save_arr(event)" name="Save" style="width: 200px">Save</button>
     </div>
     <div id="root">
       <div id="shadow" class="div_Shadow" draggable="true" ondragover="drag_over(event)"></div>
@@ -62,6 +64,12 @@
       
         console.log(tmp_index);
       };
+
+      function save_arr (e) {
+        // TODO inset 계산
+        console.log('===========Save 버튼 클릭===========');
+        alert('저장이 완료되었습니다!(미구현)');
+      }
     </script>
   </body>
 </html>

@@ -43,6 +43,18 @@
         // e.preventDefault();
 
         let tmp_index = 0;
+        let tmp_button = null;
+
+        // Init Button Style
+        for (let index = 0; index <= 4; index++) {
+          // tmp_button = document.getElementsByName('P' + (index).toString)[0];
+          tmp_button = document.getElementsByName('P' + String(index + 1))[0];
+          tmp_button.style = 'background-color: buttonface; color: buttontext; font-weight: normal';
+        }
+
+        // Set Button Style
+        tmp_button = document.getElementsByName(e.target.name)[0];
+        tmp_button.style = 'background-color: darksalmon; color: blue; font-weight: bold';
 
         switch (e.target.name) {
           case "P1":
@@ -61,7 +73,8 @@
             tmp_index = 4;
             break;
         }
-      
+
+        // App - arr 배열을 선택한 배열로 Copy 해주고 랜더링~
         console.log(tmp_index);
       };
 

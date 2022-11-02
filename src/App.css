@@ -25,6 +25,7 @@ button {
   width: 60px;
   height: 30px;
 
+  user-select: none;
   cursor: default;
 }
 
@@ -91,6 +92,7 @@ button {
   text-align: center;  
   vertical-align: middle;
   background-color: darkseagreen;
+  user-select: none;
 }
 
 .div_Col {

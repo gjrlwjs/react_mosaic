@@ -17,6 +17,8 @@ let drop_id    = -1;
 function App() {
   const [arr, setArr] = useState([]);
 
+  // arr = tmp_arr;
+
   if (bst.root === null) {
     console.log("===========Root 생성===========");
     bst.root = new Node(idx, "N", "C", "windows " + (node_text_idx + 1), 0, 0, 0, 0, 100);
@@ -84,19 +86,35 @@ function App() {
   const onMouseDown_bar_event = (e) => {
     drag_node = null;
 
-    console.log("==============Bar Down=============");  
+    console.log("==============Bar Down=============");
+
     // 마우스 다운 이벤트 발생 => 마우스의 움직임에 따라, onMouseMove 이벤트를 유지한다(onMouseUp이 될 때까지 or onMouseLeave)
     // 마우스 움직임에 따른 이벤트 등록
     const bar = e.target;
-    bar.addEventListener('drag',    onMouseDrag_bar_event);
-    bar.addEventListener('dragend', onMouseDragend_bar_event);
+    bar.addEventListener('dragstart', onMouseDragstart_bar_event);
+    bar.addEventListener('drag',      onMouseDrag_bar_event);
+    bar.addEventListener('dragend',   onMouseDragend_bar_event);
 
     // bar.addEventListener("touchmove", onMouseDrag_bar_event, TOUCH_EVENT_OPTIONS);
     // bar.addEventListener("touchend", onMouseDragend_bar_event, true);
-  
+
+    function onMouseDragstart_bar_event(event) {
+      console.log("============Bar Drag Start===========");
+
+      // let cv = new ImageBitmap();
+      // cv.width  = 0;
+      // cv.height = 0;
+      // event.dataTransfer.setDragImage(cv, 0, 0);      
+    }    
+
     function onMouseDrag_bar_event(event) {
       console.log("==============Bar Drag=============");
       // console.log(event);
+      // event.dataTransfer.dragEffect = "move";
+      event.preventDefault();
+      // console.log(event.dataTransfer.dragEffect)
+      // event.dataTransfer.effectAllowed = "move";
+      // console.log(this);
 
       // 배율 변경
       if (event.x > 0 || event.y > 0) {
@@ -137,8 +155,8 @@ function App() {
     function onMouseDragend_bar_event() {
       console.log("==============Bar Up=============");
 
-      bar.removeEventListener('drag',    onMouseDrag_bar_event);
-      bar.removeEventListener('dragend', onMouseDragend_bar_event);
+      bar.removeEventListener('drag',      onMouseDrag_bar_event);
+      bar.removeEventListener('dragend',   onMouseDragend_bar_event);
 
       // bar.removeEventListener("touchmove", onMouseDrag_bar_event,TOUCH_EVENT_OPTIONS);
       // bar.removeEventListener("touchend", onMouseDragend_bar_event, true);
@@ -250,6 +268,10 @@ function App() {
   }
 
   const onDragenter_div_event = (e) => {
+    if (drag_node === null) {
+      return false;
+    }
+
     console.log("==============Div enter=============");  
     // e.preventDefault();
 
@@ -311,11 +333,11 @@ function App() {
   }  
 
   const onDragOver_div_event = (e) => {  
-    console.log("==============Drag Over=============");
     if (drag_node === null) {
       return false;
     }
 
+    console.log("==============Drag Over=============");
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
 

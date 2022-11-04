@@ -102,7 +102,7 @@ button {
 
   position: absolute;
   z-index: 10;
-  touch-action: none;
+  /* touch-action: none; */
   background-color: pink;
 }
 
@@ -113,6 +113,6 @@ button {
 
   position: absolute;
   z-index: 10;
-  touch-action: none;
+  /* touch-action: none; */
   background-color: pink;
 }

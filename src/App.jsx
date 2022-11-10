@@ -123,16 +123,22 @@ function App() {
         let tmp_l = tmp_p.left;
         let tmp_r = tmp_p.right;
 
+        let tmp_tree   = document.getElementById("div_tree").offsetWidth;
+        let tmp_title  = document.getElementById("div_mosaic_menubar").offsetHeight;
+        let tmp_width  = e.target.parentElement.offsetWidth;
+        let tmp_height = e.target.parentElement.offsetHeight;
+
         // 현재 마우스의 좌표를 기준으로, 몇퍼센트인지 역계산을 해줘야한다.
         // 대상의 부모의 Width와 Left 좌표값을 가지고 계산하면 된다.
         // ((마우스의 현재 좌표 - 기준좌표)  / 부모의 길이) * 100
         // 부모의 div type이 C | R 에 따라 다르다.
         if (tmp_p.div_type === "C") {
           // tmp_l.ratio = ((event.clientX - (tmp_p.inset_left * (window.innerWidth  / 100))) / (window.innerWidth))  * 100;
-          tmp_l.ratio = (( event.clientX       - (tmp_p.inset_left *  (window.innerWidth         / 100))) / (PercentToLength( window.innerWidth,        tmp_p.inset_left, tmp_p.inset_right ))) * 100;
+          tmp_l.ratio = (((event.clientX - tmp_tree)  - (tmp_p.inset_left *  (tmp_width   / 100))) / (PercentToLength(tmp_width,  tmp_p.inset_left, tmp_p.inset_right ))) * 100;
         } else {
           // tmp_l.ratio = ((event.clientY - (tmp_p.inset_top  * (window.innerHeight / 100))) / (window.innerHeight)) * 100;
-          tmp_l.ratio = (((event.clientY - 40) - (tmp_p.inset_top  * ((window.innerHeight - 40)  / 100))) / (PercentToLength((window.innerHeight - 40), tmp_p.inset_top,  tmp_p.inset_bottom))) * 100;
+          // tmp_l.ratio = (((event.clientY - tmp_title) - (tmp_p.inset_top  * ((tmp_height - tmp_title)  / 100))) / (PercentToLength((tmp_height - tmp_title), tmp_p.inset_top,  tmp_p.inset_bottom))) * 100;
+          tmp_l.ratio = (((event.clientY - tmp_title) - (tmp_p.inset_top  *  (tmp_height  / 100))) / (PercentToLength(tmp_height, tmp_p.inset_top,  tmp_p.inset_bottom))) * 100;
         } 
         if (tmp_l.ratio < 15) {
           tmp_l.ratio = 15;
@@ -155,6 +161,7 @@ function App() {
     function onMouseDragend_bar_event() {
       console.log("==============Bar Up=============");
 
+      bar.removeEventListener('dragstart', onMouseDragstart_bar_event);
       bar.removeEventListener('drag',      onMouseDrag_bar_event);
       bar.removeEventListener('dragend',   onMouseDragend_bar_event);
 
@@ -344,10 +351,15 @@ function App() {
     let shadow_div = document.getElementById("shadow");
     let tmp_node = arr[parseInt(e.target.parentElement.getAttribute("name"))];
 
-    let point_x      = PercentToPx(window.innerWidth,  tmp_node.inset_left);
-    let point_y      = PercentToPx(window.innerHeight, tmp_node.inset_top);
-    let point_width  = PercentToLength(window.innerWidth,  tmp_node.inset_left, tmp_node.inset_right);
-    let point_height = PercentToLength(window.innerHeight, tmp_node.inset_top,  tmp_node.inset_bottom);
+    let tmp_tree   = document.getElementById("div_tree").offsetWidth;
+    let tmp_title  = document.getElementById("div_mosaic_menubar").offsetHeight;
+    let tmp_width  = document.getElementById("div_mosaic_body").offsetWidth;
+    let tmp_height = document.getElementById("div_mosaic_body").offsetHeight;
+    
+    let point_x      = PercentToPx(tmp_width,  tmp_node.inset_left);
+    let point_y      = PercentToPx(tmp_height, tmp_node.inset_top);
+    let point_width  = PercentToLength(tmp_width,  tmp_node.inset_left, tmp_node.inset_right);
+    let point_height = PercentToLength(tmp_height, tmp_node.inset_top,  tmp_node.inset_bottom);
 
     // console.log("==============Drag Over=============");
     // console.log("Node id = " + e.target.parentElement.getAttribute("name") + " / X 좌표 = " + e.clientX + " / 좌표 Y = " + e.clientY);
@@ -359,8 +371,8 @@ function App() {
     let tmp_width_length  = (point_width  * 0.33);
     let tmp_height_length = (point_height * 0.33);
 
-    let result_X = Position_Check(e.clientX, point_x, tmp_width_length);
-    let result_Y = Position_Check(e.clientY, point_y, tmp_height_length);    
+    let result_X = Position_Check((e.clientX - tmp_tree),  point_x, tmp_width_length);
+    let result_Y = Position_Check((e.clientY - tmp_title), point_y, tmp_height_length);    
 
     // point_width 의 위치를 찾고, 결정한다.
     let tmp_position = Position_Fix(result_X, result_Y);
@@ -393,7 +405,7 @@ function App() {
       // default: // L
       case "L":
         shadow_div.style.inset = `${tmp_node.inset_top}% ${tmp_node.inset_right + ((100 - (tmp_node.inset_left + tmp_node.inset_right)) / 2)}% ${tmp_node.inset_bottom}% ${tmp_node.inset_left}%`;
-      break;
+        break;
     }          
     shadow_div.style.display = 'block';
     shadow_div.style.zIndex  = 100;

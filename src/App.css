@@ -29,15 +29,98 @@ button {
   cursor: default;
 }
 
-#root{
+#div_tree{
+  /* width: calc(20% - 6px); */
+  margin-right: -6px;
+  width: 20%;
+  height: 100%;
+  /* position: relative; */
+  float: left;
+  background-color: palevioletred;  
+  user-select: none;  
+  text-align: center;
+}
+
+#div_mosaic{
+  margin-left: 0px;
+  width: 80%;
+  height: 100%;
+  position: relative;
+  float: right;
+}
+
+#div_mosaic_menubar {
+  /* flex: 1; */
+  border: 0;
+  border-color: Red;
+  background-color: gray;
   width: 100%;
-  height: calc(100% - 40px);
-  position: fixed;
+  height: 40px;
+  position: static;
+  z-index: 1;
+  text-align: right;
+}
+
+#div_mosaic_main{
+  width: 100%;
+  height: calc(70% - 40px);
+  /* position: fixed; */
+  position: static;
+}
+
+#div_mosaic_body{
+  width: 100%;
+  height: inherit;
+  position: absolute;
 }
 
 .draggable.dragging {
   opacity: 0.5;
 }
+
+#div_grid{
+  /* width: calc(20% - 6px); */
+  /* margin-top: -6px; */
+  width: 100%;
+  height: 30%;
+  /* position: relative; */
+  position: static;
+  /* float: inline-end; */
+  background-color: burlywood;  
+  user-select: none;  
+  text-align: center;
+}
+
+#main_Col {
+  /* margin-left: -3px; */
+  width: 6px;
+  height: 100%;  
+  cursor: ew-resize;
+
+  float: left;
+  /* position: relative; */
+  z-index: 10;
+  /* touch-action: none; */
+  background-color: chartreuse;
+}
+
+#main_Row {
+  /* margin-top: -3px; */
+  width: 100%; 
+  height: 6px;
+  cursor: ns-resize;
+
+  float: left;
+  /* position: relative; */
+  z-index: 10;
+  /* touch-action: none; */
+  background-color: chartreuse;
+}
+
+
+
+
+
 
 .div_Shadow {
   /* flex: 1; */
@@ -52,21 +135,9 @@ button {
   /* cursor: pointer;   */
 }
 
-.div_Menubar {
-  /* flex: 1; */
-  border: 0;
-  border-color: Red;
-  background-color: gray;
-  width: 100%;
-  height: 40px;
-  position: static;
-  z-index: 1;
-  text-align: right;
-}
-
 .div_Background {
   /* flex: 1; */
-  border: 3px;
+  border: 0;
   border-color: Red;
   background-color: white;
   inset: "0% 0% 0% 0%";

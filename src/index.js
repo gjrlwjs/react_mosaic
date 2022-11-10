@@ -33,7 +33,7 @@ const onDrag_Over_shadow_event = (e) => {
   e.preventDefault();
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('div_mosaic_body'));
 root.render(
 <>
   <div id="shadow" className="div_Shadow" draggable="true" onDragOver={onDrag_Over_shadow_event}></div>

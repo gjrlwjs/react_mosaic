@@ -1,8 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';
+
 import './index.css';
 import './App.css';
 import App from './App';
+import Tree_Component from './Tree_Component';
+import Grid_Component from './Grid_Component';
 
 // const number = document.getElementById("number");
 // const increase = document.getElementById("inc");
@@ -33,10 +38,20 @@ const onDrag_Over_shadow_event = (e) => {
   e.preventDefault();
 }
 
+const d_tree = ReactDOM.createRoot(document.getElementById('div_tree'));
+d_tree.render(
+  <Tree_Component />
+)
+
 const root = ReactDOM.createRoot(document.getElementById('div_mosaic_body'));
 root.render(
-<>
-  <div id="shadow" className="div_Shadow" draggable="true" onDragOver={onDrag_Over_shadow_event}></div>
-  <App />
-</>  
+  <>
+    <div id="shadow" className="div_Shadow" draggable="true" onDragOver={onDrag_Over_shadow_event}></div>
+    <App />
+  </>  
+);
+
+const d_grid = ReactDOM.createRoot(document.getElementById('div_grid_main'));
+d_grid.render(
+  <Grid_Component />
 );

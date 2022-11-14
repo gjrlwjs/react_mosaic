@@ -1,8 +1,6 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { Grid } from "react-redux-grid";
-
-// import { configStore } from "./Store";
 import { configStore } from "./Store";
 
 function ProvidedGrid(props) {

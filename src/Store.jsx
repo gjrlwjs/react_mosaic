@@ -1,5 +1,6 @@
 // import { configureStore, combineReducers } from "redux";
 
+// import configureStore from "redux";
 import { legacy_createStore, combineReducers } from "redux";
 import { Reducers as gridReducers } from "react-redux-grid";
 

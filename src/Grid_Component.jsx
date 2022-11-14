@@ -42,9 +42,9 @@ const events = {
 
 function Grid_Component() {
   return (
-    <div>
-      <Grid stateKey={"foo"} columns={columns} data={data} events={events} />
-    </div>
+      // <div>
+        <Grid stateKey={"foo"} columns={columns} data={data} events={events} />
+      // </div>
   );
 }
 

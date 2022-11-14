@@ -69,7 +69,7 @@ button {
 
 #div_mosaic_main{
   width: 100%;
-  height: calc(70% - 40px);
+  height: calc(100% - 40px);
   /* position: fixed; */
   position: static;
 }
@@ -84,19 +84,6 @@ button {
   opacity: 0.5;
 }
 
-#div_grid{
-  /* width: calc(20% - 6px); */
-  /* margin-top: -6px; */
-  width: 100%;
-  height: 30%;
-  /* position: relative; */
-  position: static;
-  /* float: inline-end; */
-  background-color: burlywood;  
-  user-select: none;  
-  text-align: center;
-}
-
 #main_Col {
   /* margin-left: -3px; */
   width: 6px;
@@ -109,24 +96,6 @@ button {
   /* touch-action: none; */
   background-color: chartreuse;
 }
-
-#main_Row {
-  /* margin-top: -3px; */
-  width: 100%; 
-  height: 6px;
-  cursor: ns-resize;
-
-  float: left;
-  /* position: relative; */
-  z-index: 10;
-  /* touch-action: none; */
-  background-color: chartreuse;
-}
-
-
-
-
-
 
 .div_Shadow {
   /* flex: 1; */
